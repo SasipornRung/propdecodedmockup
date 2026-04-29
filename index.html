@@ -455,9 +455,828 @@ body{
   margin-bottom:4px;
 }
 .site-footer .disclaimer{max-width:580px;margin:0 auto;line-height:1.55}
+
+/* ============ SPA VIEW SWITCHING ============ */
+body[data-view="renter"] #investor-view{display:none}
+body[data-view="investor"] #renter-view{display:none}
+
+/* When in investor view, body adopts dark-canvas-like surface */
+body[data-view="investor"]{
+  background:var(--bg);
+}
+
+/* Investor view container — provide top padding for tenant's site-header */
+#investor-view{
+  padding-top:0;
+}
+
+/* The investor's own .shell layout uses padding-top:var(--topbar-h) which doesn't exist anymore.
+   Override to give it just enough breathing room. */
+body[data-view="investor"] #investor-view .shell{
+  padding-top:0;
+}
+
+/* Investor sidebar offset from tenant's sticky site-header (header-h ≈ 76px) */
+body[data-view="investor"] #investor-view .sidebar{
+  top:0;
+  height:auto;
+  min-height:calc(100vh - 80px);
+}
+
+/* Investor light-theme overrides on top of color-mapped CSS */
+body[data-view="investor"] .hero{
+  background:radial-gradient(800px 300px at 90% 0%, var(--primary-soft), transparent 60%),radial-gradient(600px 300px at 0% 100%, var(--accent-soft), transparent 70%),var(--surface);
+  border:1px solid var(--line);
+}
+body[data-view="investor"] .hero h1{color:var(--ink) !important;background:none !important;-webkit-background-clip:initial !important;background-clip:initial !important}
+body[data-view="investor"] .hero h1 .accent{
+  background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+body[data-view="investor"] .hero-eyebrow{
+  background:var(--primary-soft);border:1px solid rgba(47,93,80,0.2);color:var(--primary);
+}
+body[data-view="investor"] .sidebar{background:var(--surface);border-right:1px solid var(--line)}
+body[data-view="investor"] .nav-item{color:var(--muted)}
+body[data-view="investor"] .nav-item:hover{color:var(--ink);background:var(--surface-2)}
+body[data-view="investor"] .nav-item.active{color:var(--primary);background:var(--primary-soft)}
+body[data-view="investor"] .nav-item.active::before{background:var(--primary)}
+body[data-view="investor"] .card,
+body[data-view="investor"] .snap-card,
+body[data-view="investor"] .map-card,
+body[data-view="investor"] .info-card,
+body[data-view="investor"] .proj-card{
+  background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm);
+}
+body[data-view="investor"] .leaflet-container{background:#EDE7D7 !important}
+body[data-view="investor"] #map{background:#EDE7D7 !important}
+body[data-view="investor"] .leaflet-popup-content-wrapper{background:var(--surface) !important;color:var(--ink) !important;border:1px solid var(--line-strong) !important}
+body[data-view="investor"] .leaflet-popup-tip{background:var(--surface) !important}
+body[data-view="investor"] .input-wrap input,
+body[data-view="investor"] .input-wrap select{background:var(--surface-3);border:1px solid var(--line);color:var(--ink)}
+body[data-view="investor"] .input-wrap input:focus,
+body[data-view="investor"] .input-wrap select:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+body[data-view="investor"] .btn-primary{background:var(--primary);color:#fff}
+body[data-view="investor"] .btn-primary:hover{background:var(--primary-hover)}
+body[data-view="investor"] .btn-ghost{background:var(--surface-2);color:var(--ink-soft);border:1px solid var(--line)}
+body[data-view="investor"] .result-headline .value{
+  background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+body[data-view="investor"] .calc-result{background:radial-gradient(400px 200px at 100% 0%,var(--primary-soft),transparent 70%),var(--surface);border-left:1px solid var(--line)}
+body[data-view="investor"] .tools-tabs{background:var(--surface);border:1px solid var(--line)}
+body[data-view="investor"] .tools-tabs button.active{background:var(--primary-soft);color:var(--primary)}
+body[data-view="investor"] .station-marker{background:linear-gradient(135deg,var(--primary),var(--primary-hover));color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,0.95),0 0 12px rgba(47,93,80,0.2)}
+body[data-view="investor"] .area-marker{background:rgba(255,255,255,0.95);border:1.5px solid var(--primary);color:var(--primary)}
+body[data-view="investor"] .map-pill{background:rgba(255,255,255,0.92);border:1px solid var(--line);color:var(--ink-soft)}
+body[data-view="investor"] .map-pill svg{color:var(--primary)}
+body[data-view="investor"] .map-control-btn{background:rgba(255,255,255,0.92);border:1px solid var(--line);color:var(--muted)}
+body[data-view="investor"] .map-control-btn.active{color:var(--primary);background:var(--primary-soft);border-color:rgba(47,93,80,0.25)}
+body[data-view="investor"] .map-legend{background:rgba(255,255,255,0.92);border:1px solid var(--line);color:var(--muted)}
+body[data-view="investor"] .legend-bar{background:linear-gradient(90deg,#4A7B8B 0%,#5C9685 30%,#2F5D50 50%,#C4633A 75%,#A85541 100%)}
+body[data-view="investor"] .range-track{background:linear-gradient(90deg,#4A7B8B 0%,#5C9685 25%,#2F5D50 50%,#C4633A 75%,#A85541 100%)}
+body[data-view="investor"] .range-marker{background:var(--ink);box-shadow:0 0 0 2px var(--surface),0 0 8px rgba(31,36,33,0.2)}
+body[data-view="investor"] .chip.good{background:rgba(47,122,79,0.12);color:var(--good);border-color:rgba(47,122,79,0.25)}
+body[data-view="investor"] .chip.warn{background:rgba(140,105,32,0.12);color:var(--warn);border-color:rgba(140,105,32,0.25)}
+body[data-view="investor"] .chip.bad{background:rgba(168,85,65,0.12);color:var(--bad);border-color:rgba(168,85,65,0.25)}
+body[data-view="investor"] .chip.info{background:rgba(74,123,139,0.12);color:var(--info);border-color:rgba(74,123,139,0.25)}
+body[data-view="investor"] .chip.teal{background:var(--primary-soft);color:var(--primary);border-color:rgba(47,93,80,0.25)}
+body[data-view="investor"] .leaflet-control-zoom{border:1px solid var(--line) !important;background:rgba(255,255,255,0.95)}
+body[data-view="investor"] .leaflet-control-zoom a{background:transparent !important;color:var(--muted) !important;border-bottom:1px solid var(--line) !important}
+body[data-view="investor"] .leaflet-control-zoom a:hover{color:var(--primary) !important;background:var(--surface-2) !important}
+body[data-view="investor"] .leaflet-control-attribution{background:rgba(255,255,255,0.85) !important;color:var(--muted) !important}
+
+/* Investor variable shims */
+body[data-view="investor"]{
+  --bg-base:var(--bg);
+  --bg-canvas:var(--surface-3);
+  --bg-surface:var(--surface);
+  --bg-surface-2:var(--surface-2);
+  --bg-surface-3:#F0EBDC;
+  --bg-elevated:var(--surface);
+  --border:var(--line);
+  --border-strong:var(--line-strong);
+  --border-glow:rgba(47,93,80,0.18);
+  --text-primary:var(--ink);
+  --text-secondary:var(--ink-soft);
+  --text-muted:var(--muted);
+  --text-dim:var(--dim);
+  --teal:var(--primary);
+  --teal-strong:var(--primary);
+  --teal-dim:var(--primary-hover);
+  --teal-soft:var(--primary-soft);
+  --teal-glow:rgba(47,93,80,0.18);
+  --radius-sm:6px;
+  --radius:10px;
+  --radius-lg:14px;
+  --radius-xl:20px;
+  --topbar-h:0px;
+  --sidebar-w:248px;
+}
+
+/* ============ INVESTOR VIEW SCOPED STYLES ============ */
+
+/* ============ RESET & TOKENS ============ */
+
+body[data-view="investor"] {scroll-behavior:smooth}
+
+
+/* Scrollbar */
+body[data-view="investor"] ::-webkit-scrollbar {width:10px;height:10px}
+body[data-view="investor"] ::-webkit-scrollbar-track {background:var(--bg-base)}
+body[data-view="investor"] ::-webkit-scrollbar-thumb {background:var(--bg-surface-2);border-radius:10px;border:2px solid var(--bg-base)}
+body[data-view="investor"] ::-webkit-scrollbar-thumb:hover {background:var(--bg-surface-3)}
+
+/* ============ TOP BAR ============ */
+body[data-view="investor"] .topbar {
+  position:fixed;top:0;left:0;right:0;height:var(--topbar-h);
+  background:rgba(8,12,22,0.85);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:24px;padding:0 24px;z-index:100;
+}
+body[data-view="investor"] .brand {display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;flex-shrink:0}
+body[data-view="investor"] .brand-mark {
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,var(--teal) 0%,var(--teal-dim) 100%);
+  display:grid;place-items:center;
+  box-shadow:0 0 0 1px rgba(47,93,80,0.3),0 4px 16px rgba(47,93,80,0.25);
+}
+body[data-view="investor"] .brand-mark svg {width:18px;height:18px}
+body[data-view="investor"] .brand-name {
+  font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:-0.01em;
+  background:linear-gradient(180deg,#fff,#94A3B8);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+body[data-view="investor"] .brand-tag {font-size:11px;color:var(--text-dim);font-weight:400;letter-spacing:0.08em;text-transform:uppercase;margin-top:1px}
+
+body[data-view="investor"] .search-bar {
+  flex:1;max-width:520px;position:relative;
+}
+body[data-view="investor"] .search-bar input {
+  width:100%;height:40px;background:var(--bg-surface);border:1px solid var(--border);
+  border-radius:var(--radius);color:var(--text-primary);font-family:inherit;font-size:13px;
+  padding:0 16px 0 42px;transition:all 0.2s;
+}
+body[data-view="investor"] .search-bar input::placeholder {color:var(--text-dim)}
+body[data-view="investor"] .search-bar input:focus {outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft)}
+body[data-view="investor"] .search-bar svg {position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted)}
+
+body[data-view="investor"] .mode-toggle {
+  display:inline-flex;background:var(--bg-surface);border:1px solid var(--border);
+  border-radius:10px;padding:3px;gap:0;flex-shrink:0;
+}
+body[data-view="investor"] .mode-toggle button {
+  background:none;border:none;padding:7px 16px;border-radius:7px;
+  color:var(--text-muted);font-family:inherit;font-size:12.5px;font-weight:500;
+  cursor:pointer;transition:all 0.18s;letter-spacing:0.01em;
+}
+body[data-view="investor"] .mode-toggle button.active {
+  background:linear-gradient(180deg,var(--teal-strong),var(--teal-dim));
+  color:#FFFFFF;font-weight:600;
+  box-shadow:0 0 0 1px rgba(47,93,80,0.4),0 2px 8px rgba(47,93,80,0.25);
+}
+body[data-view="investor"] .mode-toggle button:not(.active):hover {color:var(--text-primary)}
+
+body[data-view="investor"] .topbar-right {display:flex;align-items:center;gap:14px;margin-left:auto}
+body[data-view="investor"] .icon-btn {
+  width:38px;height:38px;border-radius:9px;background:var(--bg-surface);border:1px solid var(--border);
+  display:grid;place-items:center;cursor:pointer;color:var(--text-muted);transition:all 0.18s;position:relative;
+}
+body[data-view="investor"] .icon-btn:hover {color:var(--teal);border-color:var(--border-strong)}
+body[data-view="investor"] .icon-btn .dot {
+  position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;
+  background:var(--teal);box-shadow:0 0 0 2px var(--bg-surface),0 0 8px var(--teal);
+}
+body[data-view="investor"] .avatar {
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,#2F5D50,#7C5BA8);
+  display:grid;place-items:center;color:#FFFFFF;font-weight:700;font-size:13px;cursor:pointer;
+  box-shadow:0 0 0 2px var(--bg-base),0 0 0 3px rgba(47,93,80,0.3);
+}
+
+/* ============ LAYOUT ============ */
+body[data-view="investor"] .shell {display:flex;padding-top:var(--topbar-h);min-height:100vh}
+body[data-view="investor"] .sidebar {
+  width:var(--sidebar-w);flex-shrink:0;position:sticky;top:var(--topbar-h);
+  height:calc(100vh - var(--topbar-h));
+  background:var(--bg-canvas);border-right:1px solid var(--border);
+  padding:20px 14px;overflow-y:auto;
+}
+body[data-view="investor"] .main {
+  flex:1;min-width:0;padding:28px 36px 80px;max-width:1600px;
+}
+
+/* ============ SIDEBAR NAV ============ */
+body[data-view="investor"] .nav-group {margin-bottom:20px}
+body[data-view="investor"] .nav-group-label {
+  font-size:10px;font-weight:600;color:var(--text-dim);
+  letter-spacing:0.14em;text-transform:uppercase;padding:0 12px 8px;
+}
+body[data-view="investor"] .nav-item {
+  display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;
+  color:var(--text-muted);text-decoration:none;font-size:13px;font-weight:500;
+  cursor:pointer;transition:all 0.15s;position:relative;margin-bottom:1px;
+}
+body[data-view="investor"] .nav-item svg {width:16px;height:16px;flex-shrink:0;opacity:0.85}
+body[data-view="investor"] .nav-item:hover {color:var(--text-primary);background:var(--bg-surface)}
+body[data-view="investor"] .nav-item.active {
+  color:var(--teal);background:var(--teal-soft);
+}
+body[data-view="investor"] .nav-item.active::before {
+  content:"";position:absolute;left:-14px;top:6px;bottom:6px;width:3px;
+  background:var(--teal);border-radius:0 3px 3px 0;box-shadow:0 0 8px var(--teal-glow);
+}
+body[data-view="investor"] .nav-sub {margin-left:26px;margin-top:2px;border-left:1px solid var(--border);padding-left:12px}
+body[data-view="investor"] .nav-sub a {
+  display:block;padding:5px 8px;font-size:12px;color:var(--text-dim);
+  text-decoration:none;border-radius:6px;transition:color 0.15s;
+}
+body[data-view="investor"] .nav-sub a:hover {color:var(--text-secondary)}
+
+body[data-view="investor"] .sidebar-footer {
+  margin-top:auto;padding:14px 12px;border-top:1px solid var(--border);
+  font-size:11px;color:var(--text-dim);line-height:1.5;
+}
+
+/* ============ SECTIONS ============ */
+body[data-view="investor"] section {scroll-margin-top:calc(var(--topbar-h) + 12px);margin-bottom:48px}
+body[data-view="investor"] .sec-header {margin-bottom:20px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
+body[data-view="investor"] .sec-eyebrow {
+  font-size:11px;font-weight:600;color:var(--teal);letter-spacing:0.16em;
+  text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:8px;
+}
+body[data-view="investor"] .sec-eyebrow::before {
+  content:"";display:inline-block;width:18px;height:1px;background:var(--teal);
+}
+body[data-view="investor"] .sec-title {
+  font-family:var(--font-display);font-weight:600;font-size:28px;letter-spacing:-0.02em;
+  line-height:1.15;color:var(--text-primary);
+}
+body[data-view="investor"] .sec-desc {color:var(--text-muted);margin-top:8px;max-width:680px;font-size:14px}
+body[data-view="investor"] .sec-action {
+  font-size:12px;color:var(--text-muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+  padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border);border-radius:8px;
+  transition:all 0.15s;
+}
+body[data-view="investor"] .sec-action:hover {color:var(--teal);border-color:var(--border-strong)}
+
+/* ============ HERO ============ */
+body[data-view="investor"] .hero {
+  background:
+    radial-gradient(800px 300px at 90% 0%, rgba(47,93,80,0.10), transparent 60%),
+    radial-gradient(600px 300px at 0% 100%, rgba(96,165,250,0.06), transparent 60%),
+    var(--bg-canvas);
+  border:1px solid var(--border);border-radius:var(--radius-xl);
+  padding:36px 40px;margin-bottom:32px;position:relative;overflow:hidden;
+}
+body[data-view="investor"] .hero::before {
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(47,93,80,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(47,93,80,0.04) 1px,transparent 1px);
+  background-size:42px 42px;mask-image:radial-gradient(ellipse 80% 60% at 50% 30%, #000, transparent);
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 30%, #000, transparent);pointer-events:none;
+}
+body[data-view="investor"] .hero-content {position:relative}
+body[data-view="investor"] .hero-eyebrow {
+  display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:99px;
+  background:var(--teal-soft);border:1px solid var(--border-glow);
+  font-size:11px;color:var(--teal);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:18px;
+}
+body[data-view="investor"] .hero-eyebrow .pulse {
+  width:6px;height:6px;border-radius:50%;background:var(--teal);
+  box-shadow:0 0 0 0 var(--teal-glow);animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(47,93,80,0.6)}
+  70%{box-shadow:0 0 0 8px rgba(47,93,80,0)}
+  100%{box-shadow:0 0 0 0 rgba(47,93,80,0)}
+}
+body[data-view="investor"] .hero h1 {
+  font-family:var(--font-display);font-weight:600;font-size:clamp(28px,3.6vw,44px);
+  letter-spacing:-0.025em;line-height:1.05;margin-bottom:14px;
+  background:linear-gradient(180deg,#FFFFFF 0%,#94A3B8 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+body[data-view="investor"] .hero h1 .accent {
+  background:linear-gradient(135deg,var(--teal) 0%,var(--info) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+body[data-view="investor"] .hero-sub {color:var(--text-secondary);max-width:640px;font-size:15px;line-height:1.6}
+body[data-view="investor"] .hero-stats {
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:32px;
+  border-top:1px solid var(--border);padding-top:24px;
+}
+body[data-view="investor"] .hero-stat {padding-right:24px;border-right:1px solid var(--border)}
+body[data-view="investor"] .hero-stat:last-child {border-right:none;padding-right:0}
+body[data-view="investor"] .hero-stat .label {font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px}
+body[data-view="investor"] .hero-stat .value {
+  font-family:var(--font-mono);font-weight:500;font-size:24px;letter-spacing:-0.02em;color:var(--text-primary);
+}
+body[data-view="investor"] .hero-stat .delta {font-size:11px;font-family:var(--font-mono);margin-top:4px;color:var(--good)}
+body[data-view="investor"] .hero-stat .delta.down {color:var(--bad)}
+
+/* ============ CARDS ============ */
+body[data-view="investor"] .card {
+  background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  position:relative;overflow:hidden;transition:border-color 0.2s;
+}
+body[data-view="investor"] .card:hover {border-color:var(--border-strong)}
+body[data-view="investor"] .card-pad {padding:22px}
+body[data-view="investor"] .card-head {
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:16px 22px;border-bottom:1px solid var(--border);
+}
+body[data-view="investor"] .card-title {
+  font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:-0.005em;
+  color:var(--text-primary);display:flex;align-items:center;gap:8px;
+}
+body[data-view="investor"] .card-title .pip {
+  width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px var(--teal-glow);
+}
+body[data-view="investor"] .card-sub {font-size:11.5px;color:var(--text-dim);letter-spacing:0.02em;margin-top:2px}
+body[data-view="investor"] .card-meta {font-size:11px;color:var(--text-muted);font-family:var(--font-mono)}
+body[data-view="investor"] .chip {
+  display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;
+  font-size:10.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;
+  background:var(--bg-surface-2);color:var(--text-muted);border:1px solid var(--border);
+}
+body[data-view="investor"] .chip.good {background:var(--good-soft);color:var(--good);border-color:rgba(52,211,153,0.25)}
+body[data-view="investor"] .chip.warn {background:var(--warn-soft);color:var(--warn);border-color:rgba(251,191,36,0.25)}
+body[data-view="investor"] .chip.bad {background:var(--bad-soft);color:var(--bad);border-color:rgba(251,113,133,0.25)}
+body[data-view="investor"] .chip.info {background:var(--info-soft);color:var(--info);border-color:rgba(96,165,250,0.25)}
+body[data-view="investor"] .chip.teal {background:var(--teal-soft);color:var(--teal);border-color:var(--border-glow)}
+
+/* ============ MAP SECTION ============ */
+body[data-view="investor"] .map-grid {
+  display:grid;grid-template-columns:1fr 360px;gap:18px;
+}
+@media (max-width:1100px){body[data-view="investor"] .map-grid {grid-template-columns:1fr}}
+body[data-view="investor"] .map-card {
+  background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  overflow:hidden;position:relative;
+}
+body[data-view="investor"] .map-toolbar {
+  position:absolute;top:14px;left:14px;right:14px;z-index:500;
+  display:flex;justify-content:space-between;gap:10px;pointer-events:none;
+}
+body[data-view="investor"] .map-toolbar > * {pointer-events:auto}
+body[data-view="investor"] .map-pill {
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 12px;background:rgba(11,18,32,0.85);backdrop-filter:blur(10px);
+  border:1px solid var(--border);border-radius:99px;font-size:12px;color:var(--text-secondary);
+}
+body[data-view="investor"] .map-pill svg {color:var(--teal)}
+body[data-view="investor"] .map-controls {display:flex;gap:6px}
+body[data-view="investor"] .map-control-btn {
+  padding:7px 12px;background:rgba(11,18,32,0.85);backdrop-filter:blur(10px);
+  border:1px solid var(--border);border-radius:8px;font-size:11.5px;font-weight:500;
+  color:var(--text-muted);cursor:pointer;transition:all 0.15s;font-family:inherit;
+}
+body[data-view="investor"] .map-control-btn:hover {color:var(--text-primary);border-color:var(--border-strong)}
+body[data-view="investor"] .map-control-btn.active {color:var(--teal);background:var(--teal-soft);border-color:var(--border-glow)}
+
+body[data-view="investor"] #map {height:520px;width:100%;background:#0A0F1C}
+body[data-view="investor"] .leaflet-container {background:#0A0F1C !important;font-family:var(--font-body) !important}
+body[data-view="investor"] .leaflet-control-zoom {
+  border:1px solid var(--border) !important;background:rgba(11,18,32,0.9);
+  backdrop-filter:blur(8px);border-radius:8px !important;overflow:hidden;
+}
+body[data-view="investor"] .leaflet-control-zoom a {
+  background:transparent !important;color:var(--text-muted) !important;
+  border-bottom:1px solid var(--border) !important;width:32px !important;height:32px !important;
+  line-height:32px !important;font-size:16px !important;
+}
+body[data-view="investor"] .leaflet-control-zoom a:hover {color:var(--teal) !important;background:var(--bg-surface) !important}
+body[data-view="investor"] .leaflet-control-zoom a:last-child {border-bottom:none !important}
+body[data-view="investor"] .leaflet-control-attribution {
+  background:rgba(11,18,32,0.85) !important;color:var(--text-dim) !important;
+  font-size:10px !important;padding:2px 6px !important;
+}
+body[data-view="investor"] .leaflet-control-attribution a {color:var(--text-muted) !important}
+body[data-view="investor"] .leaflet-popup-content-wrapper {
+  background:var(--bg-surface) !important;color:var(--text-primary) !important;
+  border:1px solid var(--border-strong) !important;border-radius:10px !important;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4) !important;
+}
+body[data-view="investor"] .leaflet-popup-tip {background:var(--bg-surface) !important;border:1px solid var(--border-strong) !important}
+body[data-view="investor"] .leaflet-popup-content {margin:14px 16px !important;line-height:1.5 !important;font-size:12.5px !important}
+body[data-view="investor"] .popup-title {font-family:var(--font-display);font-weight:600;font-size:14px;margin-bottom:6px}
+body[data-view="investor"] .popup-row {display:flex;justify-content:space-between;gap:14px;font-size:12px;color:var(--text-muted);padding:3px 0}
+body[data-view="investor"] .popup-row b {color:var(--text-primary);font-family:var(--font-mono);font-weight:500}
+
+body[data-view="investor"] .station-marker {
+  width:22px;height:22px;border-radius:50%;
+  background:linear-gradient(135deg,var(--teal),var(--teal-dim));
+  display:grid;place-items:center;color:#FFFFFF;font-size:10px;font-weight:700;
+  box-shadow:0 0 0 2px rgba(11,18,32,0.9),0 0 12px var(--teal-glow);
+  border:none;
+}
+body[data-view="investor"] .area-marker {
+  background:rgba(47,93,80,0.15);backdrop-filter:blur(4px);
+  border:1.5px solid var(--teal);border-radius:6px;padding:4px 8px;
+  font-family:var(--font-mono);font-size:10.5px;color:var(--teal);font-weight:600;
+  white-space:nowrap;
+}
+
+body[data-view="investor"] .map-legend {
+  position:absolute;bottom:14px;left:14px;z-index:500;
+  background:rgba(11,18,32,0.9);backdrop-filter:blur(10px);border:1px solid var(--border);
+  border-radius:10px;padding:10px 14px;font-size:11px;color:var(--text-muted);
+}
+body[data-view="investor"] .legend-bar {
+  height:6px;width:180px;border-radius:3px;
+  background:linear-gradient(90deg,#4A7B8B 0%,#5C9685 30%,#2F7A4F 50%,#C4943A 75%,#A85541 100%);
+  margin:6px 0 4px;
+}
+body[data-view="investor"] .legend-row {display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px}
+
+/* Sidebar of map */
+body[data-view="investor"] .map-side {display:flex;flex-direction:column;gap:14px}
+body[data-view="investor"] .area-selector {
+  display:flex;gap:6px;padding:4px;background:var(--bg-surface);border:1px solid var(--border);
+  border-radius:10px;overflow-x:auto;
+}
+body[data-view="investor"] .area-selector button {
+  flex:1;padding:7px 10px;border-radius:7px;border:none;background:none;
+  color:var(--text-muted);font-family:inherit;font-size:11.5px;font-weight:500;cursor:pointer;
+  white-space:nowrap;transition:all 0.15s;
+}
+body[data-view="investor"] .area-selector button:hover {color:var(--text-primary)}
+body[data-view="investor"] .area-selector button.active {background:var(--bg-surface-3);color:var(--teal)}
+
+/* ============ AREA SNAPSHOT ============ */
+body[data-view="investor"] .snapshot-grid {
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+}
+@media (max-width:1100px){body[data-view="investor"] .snapshot-grid {grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){body[data-view="investor"] .snapshot-grid {grid-template-columns:1fr}}
+body[data-view="investor"] .snap-card {
+  background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:18px;position:relative;overflow:hidden;
+}
+body[data-view="investor"] .snap-head {font-size:11px;color:var(--text-muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+body[data-view="investor"] .snap-head svg {color:var(--teal);opacity:0.8}
+body[data-view="investor"] .snap-value {
+  font-family:var(--font-mono);font-weight:500;font-size:26px;letter-spacing:-0.02em;color:var(--text-primary);
+  display:flex;align-items:baseline;gap:6px;
+}
+body[data-view="investor"] .snap-value .unit {font-size:13px;color:var(--text-muted);font-weight:400}
+body[data-view="investor"] .snap-foot {margin-top:14px;font-size:11.5px;color:var(--text-muted);display:flex;align-items:center;justify-content:space-between;gap:8px}
+
+/* Range gauge */
+body[data-view="investor"] .range-track {
+  height:8px;border-radius:99px;margin:14px 0 8px;position:relative;
+  background:linear-gradient(90deg,#4A7B8B 0%,#5C9685 25%,#2F7A4F 50%,#C4943A 75%,#A85541 100%);
+}
+body[data-view="investor"] .range-marker {
+  position:absolute;top:-4px;width:3px;height:16px;background:#fff;border-radius:2px;
+  box-shadow:0 0 0 2px var(--bg-surface),0 0 12px rgba(255,255,255,0.6);
+}
+body[data-view="investor"] .range-baseline {
+  position:absolute;top:-2px;width:2px;height:12px;background:rgba(255,255,255,0.5);border-radius:1px;
+}
+body[data-view="investor"] .range-labels {
+  display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;color:var(--text-dim);
+}
+
+/* Data quality bar */
+body[data-view="investor"] .quality-stack {display:flex;height:8px;border-radius:99px;overflow:hidden;background:var(--bg-surface-2);margin-top:14px}
+body[data-view="investor"] .quality-stack > div {height:100%}
+body[data-view="investor"] .q-rows {display:grid;gap:6px;margin-top:14px;font-size:11.5px}
+body[data-view="investor"] .q-row {display:flex;align-items:center;justify-content:space-between;color:var(--text-muted)}
+body[data-view="investor"] .q-row .swatch {display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:8px}
+
+/* Neutral signal */
+body[data-view="investor"] .signal-vis {display:flex;justify-content:center;margin:8px 0 4px}
+
+/* ============ PROJECT SNAPSHOT ============ */
+body[data-view="investor"] .proj-grid {display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:1100px){body[data-view="investor"] .proj-grid {grid-template-columns:repeat(2,1fr)}}
+@media (max-width:680px){body[data-view="investor"] .proj-grid {grid-template-columns:1fr}}
+body[data-view="investor"] .proj-card {
+  background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  overflow:hidden;transition:all 0.2s;cursor:pointer;
+}
+body[data-view="investor"] .proj-card:hover {border-color:var(--border-strong);transform:translateY(-2px)}
+body[data-view="investor"] .proj-img {height:140px;background:var(--bg-surface-2);position:relative;overflow:hidden}
+body[data-view="investor"] .proj-img img {width:100%;height:100%;object-fit:cover;opacity:0.85}
+body[data-view="investor"] .proj-tag {
+  position:absolute;top:10px;left:10px;padding:4px 10px;border-radius:99px;
+  background:rgba(8,12,22,0.8);backdrop-filter:blur(8px);font-size:10px;font-weight:600;
+  letter-spacing:0.06em;text-transform:uppercase;color:var(--teal);border:1px solid var(--border-glow);
+}
+body[data-view="investor"] .proj-body {padding:16px}
+body[data-view="investor"] .proj-name {font-family:var(--font-display);font-weight:600;font-size:15px;letter-spacing:-0.01em;margin-bottom:4px}
+body[data-view="investor"] .proj-meta {font-size:11.5px;color:var(--text-muted);margin-bottom:14px}
+body[data-view="investor"] .proj-stats {display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border);padding-top:12px}
+body[data-view="investor"] .proj-stat {padding-right:8px;border-right:1px solid var(--border)}
+body[data-view="investor"] .proj-stat:last-child {border-right:none;padding-right:0}
+body[data-view="investor"] .proj-stat .l {font-size:9.5px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px}
+body[data-view="investor"] .proj-stat .v {font-family:var(--font-mono);font-size:13.5px;color:var(--text-primary);font-weight:500}
+body[data-view="investor"] .proj-stat .v.up {color:var(--good)}
+body[data-view="investor"] .proj-stat .v.down {color:var(--bad)}
+
+/* ============ INVESTOR TOOLS ============ */
+body[data-view="investor"] .tools-tabs {
+  display:inline-flex;background:var(--bg-surface);border:1px solid var(--border);
+  border-radius:10px;padding:4px;gap:0;margin-bottom:18px;overflow-x:auto;max-width:100%;
+}
+body[data-view="investor"] .tools-tabs button {
+  background:none;border:none;padding:9px 16px;border-radius:7px;
+  color:var(--text-muted);font-family:inherit;font-size:13px;font-weight:500;
+  cursor:pointer;transition:all 0.15s;white-space:nowrap;
+}
+body[data-view="investor"] .tools-tabs button:hover {color:var(--text-primary)}
+body[data-view="investor"] .tools-tabs button.active {background:var(--bg-surface-3);color:var(--teal)}
+
+body[data-view="investor"] .tool-panel {display:none}
+body[data-view="investor"] .tool-panel.active {display:block;animation:fadeIn 0.3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+body[data-view="investor"] .calc-grid {display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:1000px){body[data-view="investor"] .calc-grid {grid-template-columns:1fr}}
+
+body[data-view="investor"] .calc-form {padding:24px}
+body[data-view="investor"] .calc-form h3 {
+  font-family:var(--font-display);font-weight:600;font-size:16px;margin-bottom:4px;
+}
+body[data-view="investor"] .calc-form .desc {font-size:12px;color:var(--text-muted);margin-bottom:20px;line-height:1.5}
+
+body[data-view="investor"] .field {margin-bottom:14px}
+body[data-view="investor"] .field label {
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  font-size:12px;color:var(--text-secondary);margin-bottom:6px;font-weight:500;
+}
+body[data-view="investor"] .field label .help {font-size:10.5px;color:var(--text-dim);font-weight:400}
+body[data-view="investor"] .input-wrap {position:relative}
+body[data-view="investor"] .input-wrap input, body[data-view="investor"] .input-wrap select {
+  width:100%;height:40px;background:var(--bg-canvas);border:1px solid var(--border);
+  border-radius:8px;color:var(--text-primary);font-family:var(--font-mono);font-size:13px;
+  padding:0 38px 0 14px;transition:all 0.15s;
+}
+body[data-view="investor"] .input-wrap input:focus, body[data-view="investor"] .input-wrap select:focus {outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft)}
+body[data-view="investor"] .input-suffix {
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  font-size:11.5px;color:var(--text-dim);font-family:var(--font-mono);pointer-events:none;
+}
+body[data-view="investor"] .field-row {display:grid;grid-template-columns:1fr 1fr;gap:10px}
+body[data-view="investor"] .range-input {
+  -webkit-appearance:none;appearance:none;width:100%;height:6px;background:var(--bg-surface-2);
+  border-radius:99px;outline:none;margin:8px 0;cursor:pointer;
+}
+body[data-view="investor"] .range-input::-webkit-slider-thumb {
+  -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+  background:var(--teal);border:2px solid var(--bg-canvas);cursor:pointer;
+  box-shadow:0 0 0 1px var(--teal),0 0 12px var(--teal-glow);
+}
+body[data-view="investor"] .range-input::-moz-range-thumb {
+  width:18px;height:18px;border-radius:50%;background:var(--teal);
+  border:2px solid var(--bg-canvas);cursor:pointer;box-shadow:0 0 0 1px var(--teal);
+}
+body[data-view="investor"] .range-display {display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11px;color:var(--text-muted);margin-top:-2px}
+
+body[data-view="investor"] .calc-result {
+  padding:24px;background:
+    radial-gradient(400px 200px at 100% 0%,rgba(47,93,80,0.06),transparent 70%),
+    var(--bg-surface);
+  border-left:1px solid var(--border);
+}
+@media (max-width:1000px){body[data-view="investor"] .calc-result {border-left:none;border-top:1px solid var(--border)}}
+body[data-view="investor"] .result-headline {margin-bottom:24px}
+body[data-view="investor"] .result-headline .label {font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+body[data-view="investor"] .result-headline .value {
+  font-family:var(--font-display);font-weight:600;font-size:42px;letter-spacing:-0.025em;line-height:1;
+  background:linear-gradient(135deg,var(--teal) 0%,var(--info) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+body[data-view="investor"] .result-headline .unit {font-size:18px;color:var(--text-muted);margin-left:4px}
+
+body[data-view="investor"] .result-rows {display:flex;flex-direction:column;gap:0;border-top:1px solid var(--border)}
+body[data-view="investor"] .result-row {
+  display:flex;justify-content:space-between;align-items:center;padding:12px 0;
+  border-bottom:1px solid var(--border);font-size:13px;
+}
+body[data-view="investor"] .result-row .l {color:var(--text-muted)}
+body[data-view="investor"] .result-row .v {font-family:var(--font-mono);font-weight:500;color:var(--text-primary)}
+body[data-view="investor"] .result-row .v.up {color:var(--good)}
+body[data-view="investor"] .result-row .v.down {color:var(--bad)}
+
+body[data-view="investor"] .result-note {
+  margin-top:16px;padding:12px 14px;background:var(--bg-canvas);border:1px solid var(--border);
+  border-radius:8px;font-size:11.5px;color:var(--text-muted);line-height:1.6;
+  display:flex;gap:10px;align-items:flex-start;
+}
+body[data-view="investor"] .result-note svg {color:var(--warn);flex-shrink:0;margin-top:1px}
+
+/* Portfolio table */
+body[data-view="investor"] .portfolio-card {padding:0}
+body[data-view="investor"] .portfolio-toolbar {
+  padding:16px 22px;display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid var(--border);gap:12px;flex-wrap:wrap;
+}
+body[data-view="investor"] .btn {
+  display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;
+  font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:all 0.15s;border:1px solid transparent;
+}
+body[data-view="investor"] .btn-primary {
+  background:linear-gradient(180deg,var(--teal),var(--teal-dim));color:#FFFFFF;
+  box-shadow:0 0 0 1px rgba(47,93,80,0.4);
+}
+body[data-view="investor"] .btn-primary:hover {box-shadow:0 0 0 1px rgba(47,93,80,0.6),0 4px 16px rgba(47,93,80,0.25)}
+body[data-view="investor"] .btn-ghost {background:var(--bg-surface-2);color:var(--text-secondary);border-color:var(--border)}
+body[data-view="investor"] .btn-ghost:hover {background:var(--bg-surface-3);color:var(--text-primary)}
+body[data-view="investor"] .btn-danger {background:transparent;color:var(--bad);border-color:transparent}
+body[data-view="investor"] .btn-danger:hover {background:var(--bad-soft)}
+
+body[data-view="investor"] table.port-table {width:100%;border-collapse:collapse;font-size:12.5px}
+body[data-view="investor"] .port-table thead th {
+  text-align:left;padding:10px 14px;font-size:10.5px;color:var(--text-dim);
+  font-weight:600;letter-spacing:0.08em;text-transform:uppercase;background:var(--bg-canvas);
+  border-bottom:1px solid var(--border);
+}
+body[data-view="investor"] .port-table tbody td {padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-secondary)}
+body[data-view="investor"] .port-table tbody tr:hover {background:var(--bg-surface-2)}
+body[data-view="investor"] .port-table tbody td.num {font-family:var(--font-mono);color:var(--text-primary);text-align:right}
+body[data-view="investor"] .port-table tbody td.up {color:var(--good)}
+body[data-view="investor"] .port-table tbody td.down {color:var(--bad)}
+body[data-view="investor"] .port-totals {
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--border);
+}
+body[data-view="investor"] .port-totals > div {padding:14px 18px;border-right:1px solid var(--border)}
+body[data-view="investor"] .port-totals > div:last-child {border-right:none}
+body[data-view="investor"] .port-totals .l {font-size:10.5px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px}
+body[data-view="investor"] .port-totals .v {font-family:var(--font-mono);font-size:18px;color:var(--text-primary);font-weight:500}
+
+/* ============ TENANT LENS ============ */
+body[data-view="investor"] .lens-grid {display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+@media (max-width:1000px){body[data-view="investor"] .lens-grid {grid-template-columns:1fr}}
+body[data-view="investor"] .review-card {padding:22px}
+body[data-view="investor"] .review-stars {display:flex;align-items:center;gap:8px;margin-bottom:12px}
+body[data-view="investor"] .review-rating {font-family:var(--font-mono);font-size:28px;font-weight:500;color:var(--text-primary)}
+body[data-view="investor"] .review-rating .out {font-size:14px;color:var(--text-muted)}
+body[data-view="investor"] .stars {display:flex;gap:2px}
+body[data-view="investor"] .stars svg {color:var(--warn)}
+body[data-view="investor"] .review-bars {display:grid;gap:8px;margin-top:14px}
+body[data-view="investor"] .bar-row {display:grid;grid-template-columns:24px 1fr 36px;align-items:center;gap:10px;font-size:11px}
+body[data-view="investor"] .bar-row .l {color:var(--text-muted);font-family:var(--font-mono)}
+body[data-view="investor"] .bar-row .track {height:6px;background:var(--bg-surface-2);border-radius:99px;overflow:hidden}
+body[data-view="investor"] .bar-row .fill {height:100%;background:linear-gradient(90deg,var(--teal-dim),var(--teal));border-radius:99px}
+body[data-view="investor"] .bar-row .pct {text-align:right;color:var(--text-muted);font-family:var(--font-mono)}
+
+body[data-view="investor"] .context-list {display:flex;flex-direction:column;gap:14px}
+body[data-view="investor"] .context-item {
+  display:flex;align-items:flex-start;gap:12px;padding:14px;
+  background:var(--bg-canvas);border:1px solid var(--border);border-radius:10px;
+}
+body[data-view="investor"] .context-icon {
+  width:36px;height:36px;border-radius:9px;background:var(--teal-soft);
+  display:grid;place-items:center;color:var(--teal);flex-shrink:0;
+}
+body[data-view="investor"] .context-item h5 {font-size:13px;font-weight:600;margin-bottom:2px}
+body[data-view="investor"] .context-item p {font-size:11.5px;color:var(--text-muted);line-height:1.5}
+body[data-view="investor"] .context-item .stat {font-family:var(--font-mono);font-size:11px;color:var(--teal);margin-top:4px}
+
+body[data-view="investor"] .feedback-card {padding:0}
+body[data-view="investor"] .feedback-list {max-height:400px;overflow-y:auto}
+body[data-view="investor"] .feedback-item {padding:14px 22px;border-bottom:1px solid var(--border)}
+body[data-view="investor"] .feedback-item:last-child {border-bottom:none}
+body[data-view="investor"] .feedback-head {display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:8px}
+body[data-view="investor"] .feedback-author {display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-muted)}
+body[data-view="investor"] .fb-dot {width:6px;height:6px;border-radius:50%;background:var(--teal)}
+body[data-view="investor"] .feedback-source {font-size:10px;color:var(--text-dim);font-family:var(--font-mono);text-transform:uppercase}
+body[data-view="investor"] .feedback-text {font-size:12.5px;color:var(--text-secondary);line-height:1.55}
+body[data-view="investor"] .feedback-tags {display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+
+/* ============ ANALYTICS CHARTS ============ */
+body[data-view="investor"] .analytics-grid {display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:1000px){body[data-view="investor"] .analytics-grid {grid-template-columns:1fr}}
+body[data-view="investor"] .chart-card {padding:0}
+body[data-view="investor"] .chart-body {padding:16px 22px 22px;position:relative}
+body[data-view="investor"] .chart-svg {width:100%;height:auto;display:block}
+body[data-view="investor"] .chart-legend {display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--text-muted);margin-top:10px}
+body[data-view="investor"] .chart-legend > span {display:inline-flex;align-items:center;gap:5px}
+body[data-view="investor"] .chart-legend .swatch {width:10px;height:10px;border-radius:2px}
+
+/* Archetype scatter */
+body[data-view="investor"] .scatter-card {padding:0}
+body[data-view="investor"] .scatter-svg {width:100%;height:auto;display:block}
+
+/* DOM bars */
+body[data-view="investor"] .dom-bars {display:flex;flex-direction:column;gap:9px}
+body[data-view="investor"] .dom-row {display:grid;grid-template-columns:90px 1fr 50px;align-items:center;gap:10px;font-size:12px}
+body[data-view="investor"] .dom-row .name {color:var(--text-secondary)}
+body[data-view="investor"] .dom-row .track {height:14px;background:var(--bg-surface-2);border-radius:4px;overflow:hidden;position:relative}
+body[data-view="investor"] .dom-row .fill {
+  height:100%;border-radius:4px;
+  background:linear-gradient(90deg,var(--teal-dim),var(--teal));
+  position:relative;
+}
+body[data-view="investor"] .dom-row .num {font-family:var(--font-mono);text-align:right;font-size:11.5px;color:var(--text-primary)}
+
+/* ============ LEGAL / METHODOLOGY ============ */
+body[data-view="investor"] .info-grid {display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media (max-width:900px){body[data-view="investor"] .info-grid {grid-template-columns:1fr}}
+body[data-view="investor"] .info-card {padding:22px}
+body[data-view="investor"] .info-card h4 {
+  font-family:var(--font-display);font-weight:600;font-size:14px;margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+}
+body[data-view="investor"] .info-card h4 svg {color:var(--teal)}
+body[data-view="investor"] .info-card p {font-size:12.5px;color:var(--text-muted);line-height:1.65;margin-bottom:8px}
+body[data-view="investor"] .info-card ul {list-style:none;padding:0;margin-top:8px;display:flex;flex-direction:column;gap:6px}
+body[data-view="investor"] .info-card li {
+  font-size:12px;color:var(--text-muted);padding-left:18px;position:relative;line-height:1.55;
+}
+body[data-view="investor"] .info-card li::before {
+  content:"";position:absolute;left:0;top:7px;width:6px;height:6px;
+  border-radius:50%;background:var(--teal);opacity:0.6;
+}
+
+body[data-view="investor"] .notice-banner {
+  padding:14px 18px;background:var(--warn-soft);border:1px solid rgba(251,191,36,0.2);
+  border-radius:10px;display:flex;gap:12px;align-items:flex-start;
+  font-size:12px;color:#FCD34D;line-height:1.55;
+}
+body[data-view="investor"] .notice-banner svg {flex-shrink:0;margin-top:1px}
+body[data-view="investor"] .notice-banner b {color:#C4943A}
+
+/* ============ CONTACT ============ */
+body[data-view="investor"] .contact-card {
+  padding:36px;background:
+    radial-gradient(500px 250px at 100% 0%, rgba(47,93,80,0.08), transparent 60%),
+    var(--bg-surface);
+  text-align:center;border:1px solid var(--border);border-radius:var(--radius-xl);
+}
+body[data-view="investor"] .contact-card h3 {font-family:var(--font-display);font-weight:600;font-size:24px;letter-spacing:-0.02em;margin-bottom:6px}
+body[data-view="investor"] .contact-card p {color:var(--text-muted);max-width:520px;margin:0 auto 20px}
+body[data-view="investor"] .contact-actions {display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+
+/* ============ FOOTER ============ */
+body[data-view="investor"] .footer {
+  margin-top:60px;padding:24px 0;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+  font-size:11.5px;color:var(--text-dim);
+}
+body[data-view="investor"] .footer a {color:var(--text-muted);text-decoration:none}
+body[data-view="investor"] .footer a:hover {color:var(--teal)}
+
+/* ============ RESPONSIVE ============ */
+body[data-view="investor"] .menu-trigger {display:none}
+@media (max-width:900px){
+  body[data-view="investor"] .menu-trigger {display:grid}
+  body[data-view="investor"] .sidebar {
+    position:fixed;left:-260px;top:var(--topbar-h);bottom:0;height:auto;
+    transition:left 0.3s;z-index:90;box-shadow:8px 0 24px rgba(0,0,0,0.4);
+  }
+  body[data-view="investor"] .sidebar.open {left:0}
+  body[data-view="investor"] .main {padding:20px 18px 60px}
+  body[data-view="investor"] .search-bar {display:none}
+  body[data-view="investor"] .brand-tag {display:none}
+  body[data-view="investor"] .topbar {padding:0 14px;gap:12px}
+  body[data-view="investor"] .topbar-right .icon-btn {display:none}  /* hide notification only — avatar still shows */
+  body[data-view="investor"] .hero {padding:24px 22px}
+  body[data-view="investor"] .hero-stats {grid-template-columns:repeat(2,1fr);gap:14px}
+  body[data-view="investor"] .hero-stat {border-right:none;padding-right:0}
+  body[data-view="investor"] .hero-stat:nth-child(odd) {border-right:1px solid var(--border)}
+  body[data-view="investor"] #map {height:360px}
+}
+@media (max-width:560px){
+  body[data-view="investor"] .topbar {gap:8px;padding:0 10px}
+  body[data-view="investor"] .mode-toggle button {padding:6px 10px;font-size:11px}
+  body[data-view="investor"] .sec-title {font-size:22px}
+  body[data-view="investor"] .brand-name {font-size:15px}
+  body[data-view="investor"] .brand-mark {width:28px;height:28px}
+  body[data-view="investor"] .avatar {width:34px;height:34px;font-size:12px}
+  body[data-view="investor"] .menu-trigger {width:34px;height:34px}
+}
+@media (max-width:400px){
+  /* Very narrow: shrink labels to single word */
+  body[data-view="investor"] .mode-toggle button {padding:6px 8px;font-size:10.5px}
+  body[data-view="investor"] .brand-name {display:none}
+  body[data-view="investor"] .topbar {gap:6px}
+}
+
+body[data-view="investor"] .sidebar-overlay {
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);
+  z-index:80;backdrop-filter:blur(2px);
+}
+body[data-view="investor"] .sidebar-overlay.show {display:block}
+
+/* Number animation */
+body[data-view="investor"] .num-animate {font-variant-numeric:tabular-nums}
+
+/* Skeleton/shine */
+@keyframes shine{
+  0%{background-position:-200% 0}
+  100%{background-position:200% 0}
+}
+
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 </head>
-<body>
+<body data-view="renter">
 
 <!-- ============ HEADER ============ -->
 <header class="site-header">
@@ -470,14 +1289,15 @@ body{
       </span>
     </a>
     <nav class="lens-nav" role="tablist">
-      <button class="lens-btn active" type="button">ผู้เช่า</button>
-      <button class="lens-btn" type="button">นักลงทุน</button>
-      <button class="lens-btn" type="button">วิเคราะห์พื้นที่</button>
-      <button class="lens-btn" type="button">ติดต่อเรา</button>
+      <button class="lens-btn active" type="button" data-view="renter">ผู้เช่า</button>
+      <button class="lens-btn" type="button" data-view="investor">นักลงทุน</button>
+      <button class="lens-btn" type="button" data-view="investor" data-scroll="explore">วิเคราะห์พื้นที่</button>
+      <button class="lens-btn" type="button" data-action="contact">ติดต่อเรา</button>
     </nav>
   </div>
 </header>
 
+<div id="renter-view">
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <div class="shell">
@@ -601,6 +1421,959 @@ body{
     ข้อมูลห้องเช่าจากผู้ลงประกาศ — โปรดตรวจสอบรายละเอียดและเข้าชมห้องจริงก่อนตัดสินใจทำสัญญา · CondoSwift ไม่ใช่ตัวแทนนายหน้า
   </div>
 </footer>
+
+</div><!-- /#renter-view -->
+
+<div id="investor-view">
+
+
+<!-- ============ TOP BAR ============ -->
+
+
+
+
+<div class="shell">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-label">Navigate</div>
+      <a class="nav-item active" data-target="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Explore Market</div>
+      <a class="nav-item" data-target="explore">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+        Area Snapshot
+      </a>
+      <a class="nav-item" data-target="projects">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg>
+        Project Snapshot
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Investor Tools</div>
+      <a class="nav-item" data-target="tools">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Calculators
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Tenant Lens</div>
+      <a class="nav-item" data-target="lens">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Review Signals
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Advanced Analytics</div>
+      <a class="nav-item" data-target="analytics">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        HPI · DOM · Take-up
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Reference</div>
+      <a class="nav-item" data-target="legal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Legal &amp; Risk Context
+      </a>
+      <a class="nav-item" data-target="methodology">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Methodology
+      </a>
+      <a class="nav-item" data-target="contact">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg>
+        Contact
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div style="margin-bottom:6px"><span style="color:var(--teal)">●</span> ระบบทำงานปกติ</div>
+      <div>v0.4.2 · ข้อมูล Q1 2026</div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <!-- ============ HOME / HERO ============ -->
+    <section id="home">
+      <div class="hero">
+        <div class="hero-content">
+          <div class="hero-eyebrow">
+            <span class="pulse"></span>
+            <span>Investor Mode · กรุงเทพมหานคร</span>
+          </div>
+          <h1>ตัดสินใจลงทุนคอนโด<br>ด้วย<span class="accent"> ข้อมูลที่ถอดรหัสแล้ว</span></h1>
+          <p class="hero-sub">
+            แดชบอร์ดสำหรับนักลงทุนอสังหาริมทรัพย์ — รวม Market Range, Yield Trend, HPI, DOM และ Sentiment
+            จากหลายแหล่งข้อมูล นำเสนอเป็นช่วง (range) ไม่ใช่ราคาเดียว เพื่อให้คุณตัดสินใจเองอย่างมีบริบท
+          </p>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <div class="label">Tracked Areas</div>
+              <div class="value">42</div>
+              <div class="delta">+3 ย่านในไตรมาสนี้</div>
+            </div>
+            <div class="hero-stat">
+              <div class="label">Median Price (BKK)</div>
+              <div class="value">฿158K<span style="font-size:13px;color:var(--text-dim)">/sqm</span></div>
+              <div class="delta">+2.4% YoY</div>
+            </div>
+            <div class="hero-stat">
+              <div class="label">Avg Rental Yield</div>
+              <div class="value">4.6<span style="font-size:13px;color:var(--text-dim)">%</span></div>
+              <div class="delta down">−0.2% QoQ</div>
+            </div>
+            <div class="hero-stat">
+              <div class="label">Data Quality Index</div>
+              <div class="value">A−</div>
+              <div class="delta">2,341 reviews · 8 sources</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EXPLORE MARKET / MAP ============ -->
+    <section id="explore">
+      <div class="sec-header">
+        <div>
+          <div class="sec-eyebrow">Explore Market</div>
+          <h2 class="sec-title">Interactive Heatmap &amp; Area Snapshot</h2>
+          <p class="sec-desc">
+            แผนที่ความหนาแน่นราคาคอนโดในกรุงเทพ ฯ พร้อมจุดสถานี BTS/MRT และ Snapshot ข้อมูลสำคัญต่อย่าน
+            กดที่ marker หรือเลือกย่านด้านขวาเพื่อดูรายละเอียด
+          </p>
+        </div>
+        <a class="sec-action" href="#methodology">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          แหล่งที่มา
+        </a>
+      </div>
+
+      <div class="map-grid">
+        <div class="map-card">
+          <div class="map-toolbar">
+            <div class="map-pill">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>กรุงเทพมหานคร</span>
+            </div>
+            <div class="map-controls">
+              <button class="map-control-btn active" data-layer="heat">Price Heat</button>
+              <button class="map-control-btn" data-layer="yield">Yield Heat</button>
+              <button class="map-control-btn" data-layer="risk">Flood Risk</button>
+            </div>
+          </div>
+          <div id="map"></div>
+          <div class="map-legend">
+            <div style="font-size:10.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-dim)">ราคา ฿/sqm</div>
+            <div class="legend-bar"></div>
+            <div class="legend-row"><span>80K</span><span>160K</span><span>300K+</span></div>
+          </div>
+        </div>
+
+        <div class="map-side">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <div class="card-title"><span class="pip"></span>ย่านที่เลือก</div>
+                <div class="card-sub" id="area-name">Sukhumvit / Thonglor</div>
+              </div>
+              <span class="chip teal" id="area-grade">Grade A</span>
+            </div>
+            <div class="card-pad">
+              <div class="area-selector" id="area-selector">
+                <button data-area="thonglor" class="active">Thonglor</button>
+                <button data-area="sukhumvit">Sukhumvit</button>
+                <button data-area="ari">Ari</button>
+                <button data-area="ratchada">Ratchada</button>
+                <button data-area="onnut">On Nut</button>
+              </div>
+
+              <div style="margin-top:18px;display:grid;gap:14px">
+                <div>
+                  <div style="font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">Market Range (Sale ฿/sqm)</div>
+                  <div class="range-track">
+                    <div class="range-baseline" id="area-baseline" style="left:50%"></div>
+                    <div class="range-marker" id="area-marker" style="left:62%"></div>
+                  </div>
+                  <div class="range-labels">
+                    <span id="area-min">120K</span>
+                    <span id="area-mid" style="color:var(--text-muted)">180K</span>
+                    <span id="area-max">280K</span>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--border);padding-top:14px">
+                  <div style="padding-right:14px;border-right:1px solid var(--border)">
+                    <div style="font-size:10.5px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em">Rental Yield</div>
+                    <div style="font-family:var(--font-mono);font-size:18px;color:var(--text-primary);font-weight:500;margin-top:4px" id="area-yield">4.8%</div>
+                    <div style="font-size:11px;color:var(--good);font-family:var(--font-mono)" id="area-yield-d">+0.3%</div>
+                  </div>
+                  <div style="padding-left:14px">
+                    <div style="font-size:10.5px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em">Days on Market</div>
+                    <div style="font-family:var(--font-mono);font-size:18px;color:var(--text-primary);font-weight:500;margin-top:4px" id="area-dom">62</div>
+                    <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono)" id="area-dom-d">vs 78 city avg</div>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+                  <div style="padding-right:14px;border-right:1px solid var(--border)">
+                    <div style="font-size:10.5px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em">Sentiment</div>
+                    <div style="font-family:var(--font-mono);font-size:18px;color:var(--text-primary);font-weight:500;margin-top:4px" id="area-sent">82%</div>
+                    <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono)" id="area-sent-d">2,341 reviews</div>
+                  </div>
+                  <div style="padding-left:14px">
+                    <div style="font-size:10.5px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em">Flood Risk</div>
+                    <div style="font-family:var(--font-mono);font-size:18px;color:var(--good);font-weight:500;margin-top:4px" id="area-flood">Low</div>
+                    <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">อัพเดต 7 วัน</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-pad" style="display:flex;gap:12px;align-items:flex-start">
+            <div style="width:32px;height:32px;border-radius:8px;background:var(--info-soft);color:var(--info);display:grid;place-items:center;flex-shrink:0">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </div>
+            <div style="font-size:11.5px;color:var(--text-muted);line-height:1.55">
+              ตัวเลขทั้งหมดเป็น <b style="color:var(--text-primary)">ช่วง (range)</b> ไม่ใช่ราคาประเมินเดียว ระบบ <b style="color:var(--text-primary)">ไม่แนะนำซื้อหรือไม่ซื้อ</b> — ใช้เป็นข้อมูลประกอบการตัดสินใจของท่าน
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AREA SNAPSHOT (4 KPI) -->
+      <div style="margin-top:24px">
+        <div class="sec-header" style="margin-bottom:14px">
+          <div>
+            <h3 style="font-family:var(--font-display);font-weight:600;font-size:18px">Area Snapshot · Thonglor</h3>
+          </div>
+          <span class="card-meta">อัพเดต 7 วัน · 8 sources</span>
+        </div>
+        <div class="snapshot-grid">
+          <div class="snap-card">
+            <div class="snap-head">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+              Market Range
+            </div>
+            <div class="snap-value">฿180<span class="unit">K/sqm</span></div>
+            <div class="range-track" style="margin:14px 0 8px">
+              <div class="range-baseline" style="left:50%"></div>
+              <div class="range-marker" style="left:62%"></div>
+            </div>
+            <div class="range-labels"><span>฿140K</span><span>฿220K</span></div>
+            <div class="snap-foot">
+              <span>ช่วงราคา 25th–75th</span>
+              <span class="chip good">+2.4% YoY</span>
+            </div>
+          </div>
+
+          <div class="snap-card">
+            <div class="snap-head">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              Baseline
+            </div>
+            <div class="snap-value">฿175<span class="unit">K/sqm</span></div>
+            <div style="margin-top:14px;font-size:11.5px;color:var(--text-muted);line-height:1.55">
+              คำนวณจาก median รายเดือน × archetype factor (2BR · floor 15+ · 5min walk to BTS)
+            </div>
+            <div class="snap-foot">
+              <span>วิธีคำนวณ</span>
+              <a href="#methodology" style="color:var(--teal);text-decoration:none;font-size:11px">ดู Methodology →</a>
+            </div>
+          </div>
+
+          <div class="snap-card">
+            <div class="snap-head">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="6" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Neutral Signal
+            </div>
+            <div class="signal-vis">
+              <svg width="140" height="80" viewBox="0 0 140 80">
+                <defs>
+                  <linearGradient id="sig-grad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#A85541"/>
+                    <stop offset="50%" stop-color="#C4943A"/>
+                    <stop offset="100%" stop-color="#2F7A4F"/>
+                  </linearGradient>
+                </defs>
+                <path d="M 10 70 A 60 60 0 0 1 130 70" stroke="#E5DFD2" stroke-width="8" fill="none" stroke-linecap="round"/>
+                <path d="M 10 70 A 60 60 0 0 1 130 70" stroke="url(#sig-grad)" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="170" stroke-dashoffset="20"/>
+                <circle cx="100" cy="22" r="6" fill="#2F5D50" stroke="#FFFFFF" stroke-width="2"/>
+              </svg>
+            </div>
+            <div style="text-align:center;margin-top:-8px">
+              <div style="font-family:var(--font-display);font-weight:600;font-size:16px;color:var(--teal)">Stable / Slight Up</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px">3-month rolling signal · ไม่ใช่คำแนะนำ</div>
+            </div>
+          </div>
+
+          <div class="snap-card">
+            <div class="snap-head">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Data Quality
+            </div>
+            <div class="snap-value">A<span class="unit">−</span></div>
+            <div class="quality-stack">
+              <div style="background:#2F7A4F;width:42%"></div>
+              <div style="background:#2F5D50;width:31%"></div>
+              <div style="background:#4A7B8B;width:18%"></div>
+              <div style="background:#C4943A;width:9%"></div>
+            </div>
+            <div class="q-rows">
+              <div class="q-row"><span><span class="swatch" style="background:#2F7A4F"></span>MLS direct</span><span style="font-family:var(--font-mono);color:var(--text-primary)">42%</span></div>
+              <div class="q-row"><span><span class="swatch" style="background:#2F5D50"></span>Listings</span><span style="font-family:var(--font-mono);color:var(--text-primary)">31%</span></div>
+              <div class="q-row"><span><span class="swatch" style="background:#4A7B8B"></span>Reviews</span><span style="font-family:var(--font-mono);color:var(--text-primary)">18%</span></div>
+              <div class="q-row"><span><span class="swatch" style="background:#C4943A"></span>Inferred</span><span style="font-family:var(--font-mono);color:var(--text-primary)">9%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROJECT SNAPSHOT ============ -->
+    <section id="projects">
+      <div class="sec-header">
+        <div>
+          <div class="sec-eyebrow">Project Snapshot</div>
+          <h2 class="sec-title">โครงการที่กำลังถูกจับตา</h2>
+          <p class="sec-desc">โครงการคอนโดในย่านที่มี data signal ชัด — ราคา, yield, sentiment พร้อมเปรียบเทียบกับ baseline ของย่าน</p>
+        </div>
+        <a class="sec-action" href="#explore">ดูทั้งหมด →</a>
+      </div>
+      <div class="proj-grid" id="proj-grid"></div>
+    </section>
+
+    <!-- ============ INVESTOR TOOLS ============ -->
+    <section id="tools">
+      <div class="sec-header">
+        <div>
+          <div class="sec-eyebrow">Investor Tools</div>
+          <h2 class="sec-title">เครื่องมือคำนวณสำหรับนักลงทุน</h2>
+          <p class="sec-desc">คำนวณ yield หลังหัก vacancy, ผ่อนบ้าน, ภาษีโอน และจัดพอร์ตด้วยตนเอง — ปรับค่าได้ทุกตัวแปร</p>
+        </div>
+      </div>
+
+      <div class="tools-tabs" id="tools-tabs">
+        <button class="active" data-tool="yield">Vacancy-adjusted Yield</button>
+        <button data-tool="mortgage">Mortgage</button>
+        <button data-tool="tax">Tax / Transfer</button>
+        <button data-tool="portfolio">Portfolio</button>
+      </div>
+
+      <!-- Vacancy-adjusted Yield -->
+      <div class="tool-panel active" data-panel="yield">
+        <div class="card">
+          <div class="calc-grid">
+            <div class="calc-form">
+              <h3>คำนวณ Net Yield หลังหัก Vacancy</h3>
+              <div class="desc">รวมค่าส่วนกลาง, ค่าซ่อม, vacancy rate, และค่าธรรมเนียมการบริหาร — เพื่อดูผลตอบแทนจริงไม่ใช่ gross</div>
+
+              <div class="field">
+                <label>ราคาซื้อคอนโด <span class="help">(THB)</span></label>
+                <div class="input-wrap">
+                  <input type="number" id="y-price" value="6000000" min="0">
+                  <span class="input-suffix">THB</span>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label>ขนาด <span class="help">(sqm)</span></label>
+                  <div class="input-wrap"><input type="number" id="y-size" value="35" min="0"><span class="input-suffix">sqm</span></div>
+                </div>
+                <div class="field">
+                  <label>ค่าเช่า/เดือน <span class="help">(THB)</span></label>
+                  <div class="input-wrap"><input type="number" id="y-rent" value="22000" min="0"><span class="input-suffix">THB</span></div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Vacancy Rate <span class="help" id="y-vac-l">12%</span></label>
+                <input type="range" class="range-input" id="y-vac" min="0" max="40" step="1" value="12">
+                <div class="range-display"><span>0%</span><span>20%</span><span>40%</span></div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label>ค่าส่วนกลาง <span class="help">฿/sqm/เดือน</span></label>
+                  <div class="input-wrap"><input type="number" id="y-cam" value="55"><span class="input-suffix">฿</span></div>
+                </div>
+                <div class="field">
+                  <label>ภาษีโรงเรือน/ปี <span class="help">(THB)</span></label>
+                  <div class="input-wrap"><input type="number" id="y-tax" value="6000"><span class="input-suffix">THB</span></div>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label>ค่าซ่อมบำรุง <span class="help">% ของค่าเช่า</span></label>
+                  <div class="input-wrap"><input type="number" id="y-maint" value="5" min="0"><span class="input-suffix">%</span></div>
+                </div>
+                <div class="field">
+                  <label>ค่าบริหาร <span class="help">% ของค่าเช่า</span></label>
+                  <div class="input-wrap"><input type="number" id="y-mgmt" value="8" min="0"><span class="input-suffix">%</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="calc-result">
+              <div class="result-headline">
+                <div class="label">Net Rental Yield</div>
+                <div><span class="value" id="y-result">3.21</span><span class="unit">%</span></div>
+              </div>
+              <div class="result-rows">
+                <div class="result-row"><span class="l">Gross Yield (ก่อนหัก)</span><span class="v" id="y-gross">4.40%</span></div>
+                <div class="result-row"><span class="l">รายได้ค่าเช่า/ปี</span><span class="v" id="y-rev">฿264,000</span></div>
+                <div class="result-row"><span class="l">หัก Vacancy</span><span class="v down" id="y-vac-amt">−฿31,680</span></div>
+                <div class="result-row"><span class="l">หักค่าส่วนกลาง</span><span class="v down" id="y-cam-amt">−฿23,100</span></div>
+                <div class="result-row"><span class="l">หักภาษีโรงเรือน</span><span class="v down" id="y-tax-amt">−฿6,000</span></div>
+                <div class="result-row"><span class="l">หักซ่อมบำรุง + บริหาร</span><span class="v down" id="y-other-amt">−฿30,624</span></div>
+                <div class="result-row" style="font-weight:600"><span class="l" style="color:var(--text-primary)">Net Cash Flow/ปี</span><span class="v" id="y-net">฿172,596</span></div>
+              </div>
+              <div class="result-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>ตัวเลขนี้เป็นการประมาณการเชิงวิเคราะห์ ไม่รวมการเปลี่ยนแปลงราคา (capital gain/loss) ดอกเบี้ยกู้ และความเสี่ยงเฉพาะโครงการ</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mortgage -->
+      <div class="tool-panel" data-panel="mortgage">
+        <div class="card">
+          <div class="calc-grid">
+            <div class="calc-form">
+              <h3>คำนวณค่างวดผ่อนบ้าน</h3>
+              <div class="desc">คำนวณเงินผ่อนรายเดือนตามอัตราดอกเบี้ยและระยะเวลาที่กำหนด แสดงดอกเบี้ยรวมตลอดอายุสัญญา</div>
+
+              <div class="field">
+                <label>ราคาคอนโด <span class="help">(THB)</span></label>
+                <div class="input-wrap"><input type="number" id="m-price" value="6000000"><span class="input-suffix">THB</span></div>
+              </div>
+              <div class="field">
+                <label>เงินดาวน์ <span class="help" id="m-dp-l">20% (฿1,200,000)</span></label>
+                <input type="range" class="range-input" id="m-dp" min="0" max="50" step="1" value="20">
+                <div class="range-display"><span>0%</span><span>25%</span><span>50%</span></div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label>ดอกเบี้ย <span class="help">% ต่อปี</span></label>
+                  <div class="input-wrap"><input type="number" id="m-rate" value="3.5" step="0.1"><span class="input-suffix">%</span></div>
+                </div>
+                <div class="field">
+                  <label>ระยะเวลา <span class="help">ปี</span></label>
+                  <div class="input-wrap"><input type="number" id="m-term" value="25"><span class="input-suffix">ปี</span></div>
+                </div>
+              </div>
+              <div class="field">
+                <label>รายได้/เดือน <span class="help">(สำหรับคำนวณ DSR)</span></label>
+                <div class="input-wrap"><input type="number" id="m-income" value="80000"><span class="input-suffix">THB</span></div>
+              </div>
+            </div>
+
+            <div class="calc-result">
+              <div class="result-headline">
+                <div class="label">ค่างวด/เดือน</div>
+                <div><span class="value" id="m-result">฿24,026</span></div>
+              </div>
+              <div class="result-rows">
+                <div class="result-row"><span class="l">วงเงินกู้</span><span class="v" id="m-loan">฿4,800,000</span></div>
+                <div class="result-row"><span class="l">ดอกเบี้ยรวมตลอดสัญญา</span><span class="v down" id="m-interest">฿2,407,907</span></div>
+                <div class="result-row"><span class="l">ยอดผ่อนรวม</span><span class="v" id="m-total">฿7,207,907</span></div>
+                <div class="result-row"><span class="l">DSR (ค่างวด ÷ รายได้)</span><span class="v" id="m-dsr">30.0%</span></div>
+              </div>
+              <div class="result-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>DSR ที่ธนาคารทั่วไปยอมรับอยู่ที่ 40–50% ของรายได้ — ตัวเลขจริงขึ้นอยู่กับนโยบายแต่ละธนาคารและประวัติเครดิต</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tax / Transfer -->
+      <div class="tool-panel" data-panel="tax">
+        <div class="card">
+          <div class="calc-grid">
+            <div class="calc-form">
+              <h3>คำนวณค่าโอน + ภาษีอสังหา</h3>
+              <div class="desc">ประมาณการค่าธรรมเนียมโอน, ภาษีธุรกิจเฉพาะ/อากรแสตมป์, และภาษีเงินได้หัก ณ ที่จ่าย ตามกฎหมายไทย</div>
+
+              <div class="field">
+                <label>ราคาประเมินทรัพย์ <span class="help">(THB)</span></label>
+                <div class="input-wrap"><input type="number" id="t-price" value="6000000"><span class="input-suffix">THB</span></div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label>ระยะเวลาที่ถือครอง <span class="help">ปี</span></label>
+                  <div class="input-wrap"><input type="number" id="t-years" value="3"><span class="input-suffix">ปี</span></div>
+                </div>
+                <div class="field">
+                  <label>ผู้รับภาระ</label>
+                  <div class="input-wrap"><select id="t-burden">
+                    <option value="split">หาร 50/50 (ตามธรรมเนียม)</option>
+                    <option value="seller">ผู้ขายรับ 100%</option>
+                    <option value="buyer">ผู้ซื้อรับ 100%</option>
+                  </select></div>
+                </div>
+              </div>
+              <div class="field">
+                <label>เป็นที่อยู่อาศัยหลัก? <span class="help">(มีชื่อในทะเบียนบ้าน 1 ปี+)</span></label>
+                <div class="input-wrap"><select id="t-primary">
+                  <option value="no">ไม่ใช่ — ลงทุนปล่อยเช่า</option>
+                  <option value="yes">ใช่ — ที่อยู่อาศัยหลัก</option>
+                </select></div>
+              </div>
+            </div>
+
+            <div class="calc-result">
+              <div class="result-headline">
+                <div class="label">ค่าใช้จ่ายรวมทั้งสองฝ่าย</div>
+                <div><span class="value" id="t-result">฿216,000</span></div>
+              </div>
+              <div class="result-rows">
+                <div class="result-row"><span class="l">ค่าธรรมเนียมโอน <span style="color:var(--text-dim)">(2%)</span></span><span class="v" id="t-transfer">฿120,000</span></div>
+                <div class="result-row"><span class="l">ภาษีธุรกิจเฉพาะ <span style="color:var(--text-dim)">(3.3% ถ้าถือ &lt; 5 ปี)</span></span><span class="v" id="t-sbt">฿198,000</span></div>
+                <div class="result-row"><span class="l">อากรแสตมป์ <span style="color:var(--text-dim)">(0.5% ถ้าไม่เสีย SBT)</span></span><span class="v" id="t-stamp">฿0</span></div>
+                <div class="result-row"><span class="l">ภาษีเงินได้หัก ณ ที่จ่าย <span style="color:var(--text-dim)">(progressive)</span></span><span class="v" id="t-wht">฿78,000</span></div>
+                <div class="result-row" style="font-weight:600"><span class="l" style="color:var(--text-primary)">ส่วนของผู้ขาย</span><span class="v" id="t-seller">฿216,000</span></div>
+                <div class="result-row" style="font-weight:600"><span class="l" style="color:var(--text-primary)">ส่วนของผู้ซื้อ</span><span class="v" id="t-buyer">฿180,000</span></div>
+              </div>
+              <div class="result-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>ตัวเลขประมาณการจากกฎหมายมาตรฐาน — กรณีเฉพาะ (เช่น มีมาตรการลดหย่อนชั่วคราวจากรัฐ) อาจมีค่าใช้จ่ายต่างไป ควรตรวจสอบกับกรมที่ดิน/ทนาย</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio -->
+      <div class="tool-panel" data-panel="portfolio">
+        <div class="card portfolio-card">
+          <div class="portfolio-toolbar">
+            <div>
+              <div class="card-title"><span class="pip"></span>Portfolio Manual Input</div>
+              <div class="card-sub">เพิ่มทรัพย์สินด้วยตัวเอง — ระบบไม่ดึงข้อมูลจริงจากบัญชีของคุณ</div>
+            </div>
+            <button class="btn btn-primary" id="add-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              เพิ่มทรัพย์
+            </button>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="port-table">
+              <thead>
+                <tr>
+                  <th>ชื่อโครงการ</th>
+                  <th>ย่าน</th>
+                  <th style="text-align:right">ราคาซื้อ</th>
+                  <th style="text-align:right">ค่าเช่า/เดือน</th>
+                  <th style="text-align:right">Yield</th>
+                  <th style="text-align:right">Cash Flow/ปี</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="port-body"></tbody>
+            </table>
+          </div>
+          <div class="port-totals">
+            <div><div class="l">Total Value</div><div class="v" id="p-value">฿0</div></div>
+            <div><div class="l">Annual Rent</div><div class="v" id="p-rent">฿0</div></div>
+            <div><div class="l">Avg Yield</div><div class="v" id="p-yield">—</div></div>
+            <div><div class="l">Total Cash Flow</div><div class="v" id="p-cf">฿0</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TENANT LENS ============ -->
+    <section id="lens">
+      <div class="sec-header">
+        <div>
+          <div class="sec-eyebrow">Resident / Tenant Lens</div>
+          <h2 class="sec-title">มุมมองจากผู้พักอาศัยจริง</h2>
+          <p class="sec-desc">รวมรีวิว, signal จากกระทู้, และ feedback ที่ลิงก์กลับไปแหล่งที่มา — ใช้เป็นข้อมูลคู่กับตัวเลข</p>
+        </div>
+      </div>
+
+      <div class="lens-grid">
+        <!-- Review signals -->
+        <div class="card review-card">
+          <div class="card-title" style="margin-bottom:14px"><span class="pip"></span>Review Signals</div>
+          <div class="review-stars">
+            <div class="review-rating">4.3<span class="out"> / 5</span></div>
+            <div class="stars">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" opacity="0.4"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+          </div>
+          <div class="card-sub" style="margin-bottom:6px">จาก 856 reviews · 3 แพลตฟอร์ม</div>
+          <div class="review-bars">
+            <div class="bar-row"><span class="l">5★</span><div class="track"><div class="fill" style="width:48%"></div></div><span class="pct">48%</span></div>
+            <div class="bar-row"><span class="l">4★</span><div class="track"><div class="fill" style="width:32%"></div></div><span class="pct">32%</span></div>
+            <div class="bar-row"><span class="l">3★</span><div class="track"><div class="fill" style="width:14%"></div></div><span class="pct">14%</span></div>
+            <div class="bar-row"><span class="l">2★</span><div class="track"><div class="fill" style="width:4%"></div></div><span class="pct">4%</span></div>
+            <div class="bar-row"><span class="l">1★</span><div class="track"><div class="fill" style="width:2%"></div></div><span class="pct">2%</span></div>
+          </div>
+        </div>
+
+        <!-- Living context -->
+        <div class="card card-pad">
+          <div class="card-title" style="margin-bottom:16px"><span class="pip"></span>Living Context</div>
+          <div class="context-list">
+            <div class="context-item">
+              <div class="context-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div>
+                <h5>Commute Score</h5>
+                <p>เวลาเฉลี่ยถึง CBD: <b style="color:var(--text-primary)">22 นาที</b> · เดิน BTS 8 นาที</p>
+                <div class="stat">เร็วกว่าค่าเฉลี่ยเมือง 18%</div>
+              </div>
+            </div>
+            <div class="context-item">
+              <div class="context-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div>
+                <h5>Walkability</h5>
+                <p>ร้านค้า/ร้านอาหารใน 500ม: <b style="color:var(--text-primary)">147 แห่ง</b> · ตลาดสด 2 แห่ง</p>
+                <div class="stat">Top 5% ของกรุงเทพ ฯ</div>
+              </div>
+            </div>
+            <div class="context-item">
+              <div class="context-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <div>
+                <h5>Noise Pattern</h5>
+                <p>กลางคืนเงียบ 8/10 · ใกล้ถนน Sukhumvit เสียงระดับ <b style="color:var(--text-primary)">moderate</b></p>
+                <div class="stat">based on 312 user reports</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Source-linked feedback -->
+        <div class="card feedback-card">
+          <div class="card-head">
+            <div>
+              <div class="card-title"><span class="pip"></span>Source-linked Feedback</div>
+              <div class="card-sub">ทุก quote มี link ไปแหล่งที่มา</div>
+            </div>
+          </div>
+          <div class="feedback-list">
+            <div class="feedback-item">
+              <div class="feedback-head">
+                <div class="feedback-author"><span class="fb-dot"></span>K***** S.</div>
+                <span class="feedback-source">Pantip · 3 วันก่อน</span>
+              </div>
+              <div class="feedback-text">"เดินทางสะดวกมาก ออกจากคอนโด 5 นาทีถึง BTS แต่ห้องโครงนี้ผนังบางหน่อย"</div>
+              <div class="feedback-tags">
+                <span class="chip good">+ commute</span>
+                <span class="chip warn">− build quality</span>
+              </div>
+            </div>
+            <div class="feedback-item">
+              <div class="feedback-head">
+                <div class="feedback-author"><span class="fb-dot"></span>Anonymous</div>
+                <span class="feedback-source">DDproperty · 1 wk</span>
+              </div>
+              <div class="feedback-text">"ส่วนกลางดูแลดี สระว่ายน้ำสะอาด แต่ลิฟต์ช่วงเช้ารอนาน"</div>
+              <div class="feedback-tags">
+                <span class="chip good">+ amenities</span>
+                <span class="chip warn">− elevator</span>
+              </div>
+            </div>
+            <div class="feedback-item">
+              <div class="feedback-head">
+                <div class="feedback-author"><span class="fb-dot"></span>P***** N.</div>
+                <span class="feedback-source">Google · 2 wk</span>
+              </div>
+              <div class="feedback-text">"ที่จอดรถพอดี แต่ถ้ามาช่วงเย็นต้องวนหา ใกล้ตลาดและห้างทำให้สะดวก"</div>
+              <div class="feedback-tags">
+                <span class="chip warn">~ parking</span>
+                <span class="chip good">+ location</span>
+              </div>
+            </div>
+            <div class="feedback-item">
+              <div class="feedback-head">
+                <div class="feedback-author"><span class="fb-dot"></span>M***** R.</div>
+                <span class="feedback-source">Pantip · 3 wk</span>
+              </div>
+              <div class="feedback-text">"ค่าส่วนกลางขึ้นปีนี้ 8% นิติฯ บอกซ่อมระบบน้ำ ใครซื้อให้เผื่อค่าใช้จ่ายไว้"</div>
+              <div class="feedback-tags">
+                <span class="chip bad">− common fee</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ADVANCED ANALYTICS ============ -->
+    <section id="analytics">
+      <div class="sec-header">
+        <div>
+          <div class="sec-eyebrow">Advanced Analytics</div>
+          <h2 class="sec-title">HPI · Archetype · DOM · Take-up</h2>
+          <p class="sec-desc">กราฟ trend ระยะยาวเพื่อวิเคราะห์ตลาดในเชิงลึก — ทุกชาร์ทมี baseline และ confidence band</p>
+        </div>
+      </div>
+
+      <div class="analytics-grid">
+        <!-- HPI Trend -->
+        <div class="card chart-card">
+          <div class="card-head">
+            <div>
+              <div class="card-title"><span class="pip"></span>HPI Trend</div>
+              <div class="card-sub">House Price Index · Bangkok Condo · 24mo</div>
+            </div>
+            <span class="chip good">+5.8% vs Q1'24</span>
+          </div>
+          <div class="chart-body">
+            <svg class="chart-svg" id="chart-hpi" viewBox="0 0 600 240" preserveAspectRatio="none"></svg>
+            <div class="chart-legend">
+              <span><span class="swatch" style="background:var(--teal)"></span>HPI (Bangkok)</span>
+              <span><span class="swatch" style="background:#4A7B8B;opacity:0.6"></span>National Avg</span>
+              <span><span class="swatch" style="background:rgba(94,234,212,0.2);border:1px dashed var(--teal)"></span>Confidence Band</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Archetype × Deviation -->
+        <div class="card chart-card">
+          <div class="card-head">
+            <div>
+              <div class="card-title"><span class="pip"></span>Archetype × Deviation</div>
+              <div class="card-sub">โครงการแยกตาม archetype · ราคาเทียบ baseline</div>
+            </div>
+            <span class="chip teal">42 projects</span>
+          </div>
+          <div class="chart-body">
+            <svg class="chart-svg" id="chart-scatter" viewBox="0 0 600 280"></svg>
+            <div class="chart-legend">
+              <span><span class="swatch" style="background:var(--teal)"></span>1BR Standard</span>
+              <span><span class="swatch" style="background:#4A7B8B"></span>2BR Premium</span>
+              <span><span class="swatch" style="background:#7C5BA8"></span>Studio Compact</span>
+              <span><span class="swatch" style="background:#C4943A"></span>Penthouse</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOM Analytics -->
+        <div class="card chart-card">
+          <div class="card-head">
+            <div>
+              <div class="card-title"><span class="pip"></span>DOM Analytics</div>
+              <div class="card-sub">Days on Market · ตามย่าน</div>
+            </div>
+            <span class="chip info">avg 78 วัน</span>
+          </div>
+          <div class="chart-body">
+            <div class="dom-bars" id="dom-bars"></div>
+          </div>
+        </div>
+
+        <!-- Take-up Rate -->
+        <div class="card chart-card">
+          <div class="card-head">
+            <div>
+              <div class="card-title"><span class="pip"></span>Take-up Rate Trend</div>
+              <div class="card-sub">อัตรารับซื้อ · 12mo · Bangkok Condo</div>
+            </div>
+            <span class="chip good">78% +6%</span>
+          </div>
+          <div class="chart-body">
+            <svg class="chart-svg" id="chart-takeup" viewBox="0 0 600 240"></svg>
+            <div class="chart-legend">
+              <span><span class="swatch" style="background:var(--teal)"></span>Take-up Rate (%)</span>
+              <span><span class="swatch" style="background:#C4943A;opacity:0.6"></span>New Supply (units)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LEGAL / RISK ============ -->
+    <section id="legal">
+      <div class="sec-header">
+        <div>
+          <div class="sec-eyebrow">Legal &amp; Risk Context</div>
+          <h2 class="sec-title">บริบททางกฎหมายและความเสี่ยง</h2>
+          <p class="sec-desc">ข้อควรระวังเบื้องต้นในการลงทุนคอนโดในไทย — ไม่ใช่คำปรึกษาทางกฎหมาย</p>
+        </div>
+      </div>
+
+      <div class="notice-banner" style="margin-bottom:16px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span><b>ข้อความนี้เป็นเพียงเครื่องเตือนความจำ</b> ไม่ใช่คำปรึกษาทางกฎหมายหรือทางการเงิน — ควรปรึกษาทนายและที่ปรึกษาภาษีของท่านก่อนตัดสินใจ</span>
+      </div>
+
+      <div class="info-grid">
+        <div class="card info-card">
+          <h4>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Basic Legal Reminder
+          </h4>
+          <ul>
+            <li>โควตาต่างชาติในคอนโด: ≤ 49% ของพื้นที่ห้องชุดทั้งโครงการ ตรวจ "หนังสือรับรองการรับโอนกรรมสิทธิ์"</li>
+            <li>การโอนต้องทำที่กรมที่ดิน — เตรียมโฉนด, สำเนาทะเบียนบ้าน, บัตรประชาชน, หนังสือยินยอมคู่สมรส (ถ้ามี)</li>
+            <li>หากกู้ ธนาคารจะจดจำนองในวันโอน — ค่าจดจำนอง 1% ของวงเงินกู้ (สูงสุด 200,000 ฿)</li>
+            <li>สัญญาเช่าเกิน 3 ปีต้องจดทะเบียน — ไม่จดจะมีผลแค่ 3 ปี</li>
+          </ul>
+        </div>
+
+        <div class="card info-card">
+          <h4>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Data Limitation
+          </h4>
+          <ul>
+            <li>ข้อมูลจาก MLS, listings, reviews — ไม่ใช่ข้อมูลธุรกรรมจริงทั้งหมด อาจมี bias จาก asking price</li>
+            <li>Sentiment คำนวณจาก ข้อความสาธารณะ — ไม่ใช่ผู้พักอาศัยทุกรายและอาจไม่สะท้อนความเห็นรวม</li>
+            <li>Yield ไม่รวมค่าใช้จ่ายเฉพาะโครงการ (เช่น repair fund พิเศษ) ที่อาจมีในอนาคต</li>
+            <li>HPI เป็น index ของกรุงเทพ ฯ ภาพรวม — ระดับโครงการอาจเคลื่อนไหวต่างจาก index</li>
+          </ul>
+        </div>
+
+        <div class="card info-card">
+          <h4>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Future Risk Modules
+          </h4>
+          <p>กำลังพัฒนา (Q2–Q3 2026)</p>
+          <ul>
+            <li>Climate Risk — flood, heat island, air quality projection 2030</li>
+            <li>Supply Pipeline Risk — โครงการใหม่ที่กำลังก่อสร้างในรัศมี 1km</li>
+            <li>Regulatory Risk — การเปลี่ยนผังเมือง, มาตรการรัฐ, อัตราดอกเบี้ย</li>
+            <li>Liquidity Risk — โอกาสขายต่อ ภายใน 6/12/24 เดือน</li>
+          </ul>
+        </div>
+
+        <div class="card info-card">
+          <h4>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            What changes annually
+          </h4>
+          <ul>
+            <li>กฎหมายภาษีที่ดินและสิ่งปลูกสร้าง — อัตราเริ่มต้น 0.02–0.10% ของมูลค่าประเมิน (ที่อยู่อาศัย)</li>
+            <li>มาตรการกระตุ้นจากรัฐ (เช่น ลด ค่าโอน + ค่าจดจำนอง 0.01%) — มีเงื่อนไขและระยะเวลา</li>
+            <li>นโยบาย LTV ของ ธปท. — ปัจจุบันบ้านหลังที่ 2 LTV ≤ 80–90% ขึ้นกับราคา</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ METHODOLOGY ============ -->
+    <section id="methodology">
+      <div class="sec-header">
+        <div>
+          <div class="sec-eyebrow">Methodology</div>
+          <h2 class="sec-title">ระเบียบวิธีวิเคราะห์</h2>
+          <p class="sec-desc">วิธีอ่านตัวเลขและสิ่งที่ระบบ <b>ไม่</b> อ้าง — ให้คุณตรวจสอบและตัดสินใจเองได้</p>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="card info-card">
+          <h4>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            How to read the numbers
+          </h4>
+          <p><b style="color:var(--text-primary)">Range, ไม่ใช่จุดเดียว.</b> ราคาแสดงเป็นช่วง 25th–75th percentile ของย่าน เพื่อสะท้อนความหลากหลายตามทำเล/ชั้น/มุมห้อง</p>
+          <p><b style="color:var(--text-primary)">Baseline = median × archetype factor.</b> โครงการ 1BR ชั้น 15+ ใกล้ BTS จะมี factor สูงกว่า studio ชั้นต่ำ</p>
+          <p><b style="color:var(--text-primary)">Yield คำนวณ Net หลังหัก vacancy + ค่าส่วนกลาง</b> — Gross yield ที่ broker ใช้มักโชว์ตัวเลขสูงกว่าจริง</p>
+        </div>
+
+        <div class="card info-card">
+          <h4>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Data quality rules
+          </h4>
+          <ul>
+            <li>Listing ที่มีอายุ &gt; 90 วันโดยไม่ปรับราคา — ตัดออกจาก range</li>
+            <li>Outlier ราคาเกิน 3σ จาก median ของย่าน — flag เป็น "review needed"</li>
+            <li>Reviews &lt; 10 รายการ ต่อโครงการ — ไม่นำมาคำนวณ sentiment</li>
+            <li>ทุก data point มี timestamp + source ID เพื่อ trace ย้อนกลับ</li>
+          </ul>
+        </div>
+
+        <div class="card info-card">
+          <h4>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            What the system does <b>not</b> claim
+          </h4>
+          <ul>
+            <li>ไม่ทำนายราคาอนาคต — HPI trend คือ historical, ไม่ใช่ forecast</li>
+            <li>ไม่แนะนำ "ซื้อ/ไม่ซื้อ" — ไม่ใช่ที่ปรึกษาทางการเงินที่ได้รับใบอนุญาต</li>
+            <li>ไม่ตรวจสอบ ความถูกต้องของกรรมสิทธิ์ — ต้องใช้ ทนาย/กรมที่ดิน</li>
+            <li>ไม่เป็น 100% accurate — Data Quality Index แสดงระดับความน่าเชื่อถือต่อการคำนวณ</li>
+          </ul>
+        </div>
+
+        <div class="card info-card">
+          <h4>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Disclaimer
+          </h4>
+          <p>ข้อมูลทั้งหมดในระบบนี้รวบรวมจากแหล่งสาธารณะและพันธมิตรของบริษัท เพื่อใช้เป็นข้อมูลประกอบการตัดสินใจส่วนบุคคลเท่านั้น</p>
+          <p>PropDecoded <b style="color:var(--text-primary)">ไม่รับประกัน</b> ความถูกต้องสมบูรณ์ของข้อมูล และ <b style="color:var(--text-primary)">ไม่รับผิดชอบ</b> ต่อผลขาดทุนใด ๆ จากการตัดสินใจลงทุนของผู้ใช้</p>
+          <p style="font-size:11px;color:var(--text-dim);margin-top:14px">© 2026 PropDecoded · Bangkok, Thailand · v0.4.2</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact">
+      <div class="contact-card">
+        <h3>มีคำถามเฉพาะเรื่องโครงการ?</h3>
+        <p>ทีมวิเคราะห์ของเรารับ deep-dive request — ส่งย่านหรือโครงการที่สนใจ เราจะคืนรายงานเชิงลึกภายใน 3 วันทำการ</p>
+        <div class="contact-actions">
+          <a href="#" class="btn btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            ส่ง Email
+          </a>
+          <a href="#" class="btn btn-ghost">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg>
+            โทร 02-XXX-XXXX
+          </a>
+          <a href="#" class="btn btn-ghost">LINE Official</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      <div>© 2026 PropDecoded · Decode. Decide. Drive Value.</div>
+      <div style="display:flex;gap:18px">
+        <a href="#methodology">Methodology</a>
+        <a href="#legal">Legal</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+
+
+
+
+<div class="sidebar-overlay" id="investor-overlay"></div>
+</div><!-- /#investor-view -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
 
 <script>
 /* ============================================================
@@ -1090,6 +2863,717 @@ if (document.readyState === "loading") {
 } else {
   init();
 }
+</script>
+
+<script>
+/* ============ SPA VIEW SWITCH ============ */
+window.__investorInitialized = false;
+
+function setView(view, scrollTarget){
+  document.body.setAttribute('data-view', view);
+  document.querySelectorAll('.lens-btn[data-view]').forEach(b=>{
+    b.classList.toggle('active', b.dataset.view === view);
+  });
+  window.scrollTo({top:0, behavior:'instant'});
+
+  if(view === 'investor'){
+    if(!window.__investorInitialized){
+      window.__investorInitialized = true;
+      // Wait two frames for layout to flush before Leaflet measures
+      requestAnimationFrame(()=>{
+        requestAnimationFrame(()=>{
+          if(typeof window.__initInvestor === 'function'){
+            try{ window.__initInvestor(); }catch(e){ console.error('Investor init:', e); }
+          }
+          // Force size recalc once Leaflet is ready
+          setTimeout(()=>{
+            if(window.__investorMap && window.__investorMap.invalidateSize){
+              window.__investorMap.invalidateSize();
+            }
+            if(scrollTarget){
+              const el = document.getElementById(scrollTarget);
+              if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+            }
+          }, 80);
+        });
+      });
+    } else {
+      // already inited — just resize and scroll
+      requestAnimationFrame(()=>{
+        setTimeout(()=>{
+          if(window.__investorMap && window.__investorMap.invalidateSize){
+            window.__investorMap.invalidateSize();
+          }
+          if(scrollTarget){
+            const el = document.getElementById(scrollTarget);
+            if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+          }
+        }, 80);
+      });
+    }
+  }
+}
+
+document.querySelectorAll('.lens-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const v = btn.dataset.view;
+    const action = btn.dataset.action;
+    const scroll = btn.dataset.scroll;
+    if(v){
+      setView(v, scroll);
+    } else if(action === 'contact'){
+      // scroll to footer
+      const footer = document.querySelector('.site-footer');
+      if(footer) footer.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  });
+});
+</script>
+<script>
+/* ============ INVESTOR JS (deferred init wrapped in fn) ============ */
+window.__initInvestor = function(){
+try{
+
+/* mobile menu — declarations only, click handled outside */
+const sidebar=document.querySelector('#investor-view .sidebar');
+const overlay=document.getElementById('investor-overlay');
+
+/* ============ SIDEBAR NAV (scroll spy + click) ============ */
+const navItems=document.querySelectorAll('.nav-item[data-target]');
+navItems.forEach(item=>{
+  item.addEventListener('click',e=>{
+    e.preventDefault();
+    const id=item.dataset.target;
+    document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+    sidebar.classList.remove('open');overlay.classList.remove('show');
+  });
+});
+const sectionMap={
+  home:'home',explore:'explore',projects:'projects',tools:'tools',
+  lens:'lens',analytics:'analytics',legal:'legal',methodology:'methodology',contact:'contact'
+};
+const sections=Object.values(sectionMap).map(id=>document.getElementById(id)).filter(Boolean);
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const id=entry.target.id;
+      navItems.forEach(n=>n.classList.toggle('active',n.dataset.target===id));
+    }
+  });
+},{rootMargin:'-30% 0px -60% 0px'});
+sections.forEach(s=>observer.observe(s));
+
+/* ============ MODE TOGGLE ============ */
+function showModeNotice(){
+  // Build a notice toast if tenant-listing.html isn't available in this environment
+  let toast=document.getElementById('mode-toast');
+  if(!toast){
+    toast=document.createElement('div');
+    toast.id='mode-toast';
+    toast.style.cssText='position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:200;background:var(--bg-surface);border:1px solid var(--border-strong);border-radius:12px;padding:14px 18px;color:var(--text-primary);font-size:13px;box-shadow:0 12px 40px rgba(0,0,0,0.5),0 0 0 1px var(--border-glow);max-width:420px;display:flex;gap:12px;align-items:flex-start;animation:fadeIn 0.3s;';
+    toast.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2F5D50" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div><div style="font-weight:600;margin-bottom:4px">Renter Mode = ไฟล์แยก</div><div style="font-size:12px;color:var(--text-muted);line-height:1.55">หน้าผู้เช่าอยู่ที่ <code style="font-family:var(--font-mono);background:var(--bg-canvas);padding:1px 6px;border-radius:4px;color:var(--teal);font-size:11px">tenant-listing.html</code> — เปิดทั้ง 2 ไฟล์จาก folder เดียวกันเพื่อให้สลับได้ หรือขอ Claude รวมเป็น SPA เดียวก็ได้</div></div><button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;line-height:1;padding:0;margin-left:auto">×</button>';
+    document.body.appendChild(toast);
+    setTimeout(()=>{toast?.remove()},6000);
+  }
+}
+
+document.querySelectorAll('.mode-toggle button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(btn.dataset.mode==='renter'){
+      // Try opening tenant page in new tab (non-destructive)
+      const win=window.open('tenant-listing.html','_blank');
+      // Detect failure (popup blocker or file missing)
+      if(!win){
+        showModeNotice();
+      }else{
+        // Give the new tab a moment to navigate, then check if it 404'd
+        setTimeout(()=>{
+          try{
+            if(win.document&&win.document.title&&/404|not found/i.test(win.document.title)){
+              win.close();showModeNotice();
+            }
+          }catch(e){/* cross-origin — assume it loaded */}
+        },800);
+      }
+    }else{
+      document.querySelectorAll('.mode-toggle button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  });
+});
+
+/* ============ AREA DATA ============ */
+const areas={
+  thonglor:{name:'Thonglor / Sukhumvit 55',lat:13.7237,lng:100.5836,grade:'Grade A',
+    min:140,mid:180,max:240,baseline:50,marker:62,
+    yield:'4.8%',yieldD:'+0.3%',dom:62,domD:'vs 78 city avg',sent:'82%',sentD:'2,341 reviews',flood:'Low',
+    heat:[[13.7237,100.5836,1],[13.7250,100.5820,0.9],[13.7220,100.5850,0.85]]},
+  sukhumvit:{name:'Sukhumvit / Asok',lat:13.7370,lng:100.5602,grade:'Grade A',
+    min:130,mid:170,max:230,baseline:50,marker:58,
+    yield:'5.1%',yieldD:'+0.2%',dom:55,domD:'vs 78 city avg',sent:'79%',sentD:'3,108 reviews',flood:'Low'},
+  ari:{name:'Ari / Saphan Khwai',lat:13.7798,lng:100.5440,grade:'Grade B+',
+    min:95,mid:125,max:170,baseline:50,marker:55,
+    yield:'5.3%',yieldD:'+0.4%',dom:71,domD:'vs 78 city avg',sent:'85%',sentD:'987 reviews',flood:'Low'},
+  ratchada:{name:'Ratchada / Huai Khwang',lat:13.7681,lng:100.5740,grade:'Grade B',
+    min:80,mid:105,max:140,baseline:50,marker:48,
+    yield:'5.7%',yieldD:'+0.5%',dom:84,domD:'vs 78 city avg',sent:'76%',sentD:'1,452 reviews',flood:'Medium'},
+  onnut:{name:'On Nut / Phra Khanong',lat:13.7058,lng:100.6017,grade:'Grade B',
+    min:75,mid:95,max:130,baseline:50,marker:42,
+    yield:'5.9%',yieldD:'+0.6%',dom:88,domD:'vs 78 city avg',sent:'74%',sentD:'1,108 reviews',flood:'Medium'}
+};
+
+/* ============ MAP INIT (with graceful fallback) ============ */
+function initMap(){
+  if(typeof L==='undefined'){
+    // Fallback: render static placeholder so the rest of the page works
+    const el=document.getElementById('map');
+    el.innerHTML=`
+      <div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:radial-gradient(600px 300px at 50% 50%,rgba(47,93,80,0.06),transparent);text-align:center;padding:40px">
+        <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#2F5D50" stroke-width="1.5" opacity="0.7"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div style="font-family:var(--font-display);font-weight:600;font-size:16px;color:var(--text-primary)">Interactive Map</div>
+        <div style="font-size:12.5px;color:var(--text-muted);max-width:380px;line-height:1.55">
+          แผนที่จะโหลดเมื่อเปิดในเบราว์เซอร์ที่เข้าถึง CDN ได้<br>
+          <span style="color:var(--text-dim);font-size:11.5px">หากใช้ Leaflet ไม่ได้ในสภาพแวดล้อมนี้ — ดาวน์โหลดไฟล์แล้วเปิดในเบราว์เซอร์ตรง ๆ จะใช้ได้ปกติ</span>
+        </div>
+      </div>`;
+    el.style.display='flex';
+    el.style.alignItems='stretch';
+    // Disable layer toggle buttons
+    document.querySelectorAll('.map-control-btn').forEach(b=>{b.disabled=true;b.style.opacity='0.4';b.style.cursor='not-allowed'});
+    return null;
+  }
+
+  const m=L.map('map',{zoomControl:true,attributionControl:true}).setView([13.7470,100.5800],12.2);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{
+    attribution:'© OpenStreetMap contributors, © CARTO',
+    subdomains:'abcd',maxZoom:19
+  }).addTo(m);
+  return m;
+}
+
+const map=initMap(); window.__investorMap = map;
+
+/* Heat layer (price intensity around Sukhumvit corridor) */
+const heatPoints=[
+  [13.7237,100.5836,1.0],[13.7290,100.5780,0.95],[13.7370,100.5602,0.92],[13.7390,100.5640,0.88],
+  [13.7430,100.5450,0.7],[13.7460,100.5320,0.65],[13.7798,100.5440,0.78],[13.7900,100.5400,0.6],
+  [13.7681,100.5740,0.6],[13.7700,100.5790,0.55],[13.7058,100.6017,0.55],[13.6960,100.6090,0.5],
+  [13.7220,100.5290,0.55],[13.7280,100.5180,0.52],[13.7510,100.5970,0.6],[13.7556,100.5418,0.5],
+  [13.7220,100.5350,0.6],[13.7050,100.5560,0.45],[13.7500,100.4920,0.4],[13.7850,100.5640,0.55]
+];
+let heat=null;
+if(map && typeof L.heatLayer==='function'){
+  heat=L.heatLayer(heatPoints,{
+    radius:35,blur:30,maxZoom:14,
+    gradient:{0.0:'#4A7B8B',0.3:'#5C9685',0.5:'#2F7A4F',0.75:'#C4943A',1.0:'#A85541'}
+  }).addTo(map);
+}
+
+/* Stations */
+const stations=[
+  {name:'BTS Asok',code:'E4',lat:13.7370,lng:100.5602},
+  {name:'BTS Thonglor',code:'E6',lat:13.7237,lng:100.5836},
+  {name:'BTS Phrom Phong',code:'E5',lat:13.7305,lng:100.5697},
+  {name:'BTS Ari',code:'N5',lat:13.7798,lng:100.5440},
+  {name:'BTS On Nut',code:'E9',lat:13.7058,lng:100.6017},
+  {name:'MRT Sukhumvit',code:'BL',lat:13.7376,lng:100.5614},
+  {name:'MRT Huai Khwang',code:'BL',lat:13.7681,lng:100.5740},
+  {name:'BTS Phaya Thai',code:'N2',lat:13.7570,lng:100.5341}
+];
+if(map){
+  stations.forEach(s=>{
+    const icon=L.divIcon({
+      html:`<div class="station-marker">${s.code}</div>`,
+      className:'',iconSize:[22,22],iconAnchor:[11,11]
+    });
+    L.marker([s.lat,s.lng],{icon}).addTo(map).bindPopup(
+      `<div class="popup-title">${s.name}</div>
+       <div class="popup-row"><span>Walk distance</span><b>0–600m</b></div>
+       <div class="popup-row"><span>Avg ฿/sqm radius</span><b>฿165–195K</b></div>`
+    );
+  });
+}
+
+/* Area markers */
+if(map){
+  Object.entries(areas).forEach(([key,a])=>{
+    const icon=L.divIcon({
+      html:`<div class="area-marker">${a.name.split(' /')[0]} · ฿${a.mid}K</div>`,
+      className:'',iconSize:[null,null],iconAnchor:[40,12]
+    });
+    L.marker([a.lat,a.lng],{icon}).addTo(map).bindPopup(
+      `<div class="popup-title">${a.name}</div>
+       <div class="popup-row"><span>Range ฿/sqm</span><b>฿${a.min}K – ฿${a.max}K</b></div>
+       <div class="popup-row"><span>Yield</span><b>${a.yield}</b></div>
+       <div class="popup-row"><span>DOM</span><b>${a.dom} วัน</b></div>
+       <div class="popup-row"><span>Sentiment</span><b>${a.sent}</b></div>`
+    ).on('click',()=>selectArea(key));
+  });
+}
+
+/* Map layer toggle */
+document.querySelectorAll('.map-control-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(!map||!heat||typeof L==='undefined'||typeof L.heatLayer!=='function')return;
+    document.querySelectorAll('.map-control-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const layer=btn.dataset.layer;
+    map.removeLayer(heat);
+    let gradient,points;
+    if(layer==='yield'){
+      gradient={0.0:'#7C5BA8',0.5:'#5C9685',1.0:'#2F7A4F'};
+      points=heatPoints.map(p=>[p[0],p[1],1.1-p[2]]); // inverse — lower price often higher yield
+    }else if(layer==='risk'){
+      gradient={0.0:'#2F7A4F',0.5:'#C4943A',1.0:'#A85541'};
+      points=[
+        [13.7681,100.5740,0.6],[13.7700,100.5790,0.55],[13.7058,100.6017,0.7],
+        [13.6960,100.6090,0.65],[13.7510,100.5970,0.5],[13.6850,100.5500,0.8],
+        [13.6750,100.5350,0.75],[13.6900,100.5750,0.6]
+      ];
+    }else{
+      gradient={0.0:'#4A7B8B',0.3:'#5C9685',0.5:'#2F7A4F',0.75:'#C4943A',1.0:'#A85541'};
+      points=heatPoints;
+    }
+    heat=L.heatLayer(points,{radius:35,blur:30,maxZoom:14,gradient}).addTo(map);
+  });
+});
+
+/* ============ AREA SELECTOR ============ */
+function selectArea(key){
+  const a=areas[key];if(!a)return;
+  document.querySelectorAll('#area-selector button').forEach(b=>b.classList.toggle('active',b.dataset.area===key));
+  document.getElementById('area-name').textContent=a.name;
+  document.getElementById('area-grade').textContent=a.grade;
+  document.getElementById('area-min').textContent=a.min+'K';
+  document.getElementById('area-mid').textContent=a.mid+'K';
+  document.getElementById('area-max').textContent=a.max+'K';
+  document.getElementById('area-baseline').style.left=a.baseline+'%';
+  document.getElementById('area-marker').style.left=a.marker+'%';
+  document.getElementById('area-yield').textContent=a.yield;
+  document.getElementById('area-yield-d').textContent=a.yieldD;
+  document.getElementById('area-dom').textContent=a.dom;
+  document.getElementById('area-dom-d').textContent=a.domD;
+  document.getElementById('area-sent').textContent=a.sent;
+  document.getElementById('area-sent-d').textContent=a.sentD;
+  const fld=document.getElementById('area-flood');
+  fld.textContent=a.flood;
+  fld.style.color=a.flood==='Low'?'var(--good)':a.flood==='Medium'?'var(--warn)':'var(--bad)';
+  if(map)map.flyTo([a.lat,a.lng],13.5,{duration:0.8});
+}
+document.querySelectorAll('#area-selector button').forEach(b=>{
+  b.addEventListener('click',()=>selectArea(b.dataset.area));
+});
+
+/* ============ PROJECTS ============ */
+const projects=[
+  {name:'Noble Reveal Thonglor',area:'Thonglor · BTS 8min',price:'฿28M',priceM:'฿185K/sqm',
+   yield:'4.7%',yieldUp:true,vsBase:'+3.2%',vsBaseUp:true,sent:'82%',
+   img:'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&q=80',tag:'Premium'},
+  {name:'Aspire Ari',area:'Ari · BTS 7min',price:'฿8.5M',priceM:'฿128K/sqm',
+   yield:'5.4%',yieldUp:true,vsBase:'−1.8%',vsBaseUp:false,sent:'86%',
+   img:'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&q=80',tag:'Value'},
+  {name:'The Line Sukhumvit 71',area:'Ekkamai · BTS 6min',price:'฿14M',priceM:'฿172K/sqm',
+   yield:'4.9%',yieldUp:true,vsBase:'+1.2%',vsBaseUp:true,sent:'78%',
+   img:'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&q=80',tag:'Stable'},
+  {name:'Whizdom Avenue Ratchada',area:'Ratchada · MRT 12min',price:'฿7.2M',priceM:'฿96K/sqm',
+   yield:'5.8%',yieldUp:true,vsBase:'−4.1%',vsBaseUp:false,sent:'74%',
+   img:'https://images.unsplash.com/photo-1515263487990-61b07816b324?w=400&q=80',tag:'High Yield'},
+  {name:'Ideo Mobi Sukhumvit 81',area:'On Nut · BTS 4min',price:'฿5.9M',priceM:'฿110K/sqm',
+   yield:'5.6%',yieldUp:true,vsBase:'+0.8%',vsBaseUp:true,sent:'72%',
+   img:'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&q=80',tag:'Entry'},
+  {name:'Rhythm Ekkamai Estate',area:'Ekkamai · BTS 9min',price:'฿18M',priceM:'฿178K/sqm',
+   yield:'4.6%',yieldUp:false,vsBase:'+5.4%',vsBaseUp:true,sent:'80%',
+   img:'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&q=80',tag:'Mature'}
+];
+const pg=document.getElementById('proj-grid');
+pg.innerHTML=projects.map(p=>`
+  <div class="proj-card">
+    <div class="proj-img">
+      <img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">
+      <span class="proj-tag">${p.tag}</span>
+    </div>
+    <div class="proj-body">
+      <div class="proj-name">${p.name}</div>
+      <div class="proj-meta">${p.area} · ${p.price} · ${p.priceM}</div>
+      <div class="proj-stats">
+        <div class="proj-stat">
+          <div class="l">Yield</div>
+          <div class="v ${p.yieldUp?'up':'down'}">${p.yield}</div>
+        </div>
+        <div class="proj-stat">
+          <div class="l">vs Baseline</div>
+          <div class="v ${p.vsBaseUp?'up':'down'}">${p.vsBase}</div>
+        </div>
+        <div class="proj-stat">
+          <div class="l">Sentiment</div>
+          <div class="v">${p.sent}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+`).join('');
+
+/* ============ TOOLS TABS ============ */
+document.querySelectorAll('#tools-tabs button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('#tools-tabs button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tool-panel').forEach(p=>p.classList.remove('active'));
+    document.querySelector(`.tool-panel[data-panel="${btn.dataset.tool}"]`).classList.add('active');
+  });
+});
+
+/* ============ YIELD CALCULATOR ============ */
+const fmt=n=>'฿'+Math.round(n).toLocaleString('en-US');
+const fmtSign=n=>(n<0?'−':'')+fmt(Math.abs(n));
+function calcYield(){
+  const price=+document.getElementById('y-price').value||0;
+  const rent=+document.getElementById('y-rent').value||0;
+  const size=+document.getElementById('y-size').value||0;
+  const vac=+document.getElementById('y-vac').value/100;
+  const cam=+document.getElementById('y-cam').value*size*12;
+  const tax=+document.getElementById('y-tax').value;
+  const maintP=+document.getElementById('y-maint').value/100;
+  const mgmtP=+document.getElementById('y-mgmt').value/100;
+  document.getElementById('y-vac-l').textContent=(vac*100).toFixed(0)+'%';
+  const grossRev=rent*12;
+  const vacAmt=grossRev*vac;
+  const effRev=grossRev-vacAmt;
+  const otherCost=effRev*(maintP+mgmtP);
+  const totalExp=vacAmt+cam+tax+otherCost;
+  const netCF=grossRev-totalExp;
+  const gross=price?(grossRev/price*100):0;
+  const net=price?(netCF/price*100):0;
+  document.getElementById('y-result').textContent=net.toFixed(2);
+  document.getElementById('y-gross').textContent=gross.toFixed(2)+'%';
+  document.getElementById('y-rev').textContent=fmt(grossRev);
+  document.getElementById('y-vac-amt').textContent='−'+fmt(vacAmt);
+  document.getElementById('y-cam-amt').textContent='−'+fmt(cam);
+  document.getElementById('y-tax-amt').textContent='−'+fmt(tax);
+  document.getElementById('y-other-amt').textContent='−'+fmt(otherCost);
+  document.getElementById('y-net').textContent=fmt(netCF);
+}
+['y-price','y-rent','y-size','y-vac','y-cam','y-tax','y-maint','y-mgmt'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',calcYield);
+});
+calcYield();
+
+/* ============ MORTGAGE CALCULATOR ============ */
+function calcMortgage(){
+  const price=+document.getElementById('m-price').value||0;
+  const dpPct=+document.getElementById('m-dp').value/100;
+  const rate=+document.getElementById('m-rate').value/100/12;
+  const term=+document.getElementById('m-term').value*12;
+  const income=+document.getElementById('m-income').value||1;
+  const dp=price*dpPct;
+  const loan=price-dp;
+  document.getElementById('m-dp-l').textContent=(dpPct*100).toFixed(0)+'% ('+fmt(dp)+')';
+  let pmt=0;
+  if(rate>0&&term>0)pmt=loan*rate/(1-Math.pow(1+rate,-term));
+  else if(term>0)pmt=loan/term;
+  const total=pmt*term;
+  const interest=total-loan;
+  const dsr=income?(pmt/income*100):0;
+  document.getElementById('m-result').textContent=fmt(pmt);
+  document.getElementById('m-loan').textContent=fmt(loan);
+  document.getElementById('m-interest').textContent=fmt(interest);
+  document.getElementById('m-total').textContent=fmt(total);
+  const dsrEl=document.getElementById('m-dsr');
+  dsrEl.textContent=dsr.toFixed(1)+'%';
+  dsrEl.className='v '+(dsr>50?'down':dsr>40?'':'up');
+}
+['m-price','m-dp','m-rate','m-term','m-income'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',calcMortgage);
+});
+calcMortgage();
+
+/* ============ TAX CALCULATOR ============ */
+function calcTax(){
+  const price=+document.getElementById('t-price').value||0;
+  const years=+document.getElementById('t-years').value||0;
+  const burden=document.getElementById('t-burden').value;
+  const primary=document.getElementById('t-primary').value==='yes';
+  const transfer=price*0.02;
+  const useSBT=years<5&&!primary;
+  const sbt=useSBT?price*0.033:0;
+  const stamp=useSBT?0:price*0.005;
+  // simplified WHT — progressive based on years
+  const baseRates={1:0.05,2:0.07,3:0.09,4:0.11,5:0.13};
+  const whtRate=primary?0.03:(baseRates[Math.min(years,5)]||0.13);
+  const wht=price*whtRate*0.4; // simplified deduction
+  const sellerCost=sbt+stamp+wht+(burden==='split'?transfer/2:burden==='seller'?transfer:0);
+  const buyerCost=burden==='split'?transfer/2:burden==='buyer'?transfer:0;
+  const total=sellerCost+buyerCost;
+  document.getElementById('t-result').textContent=fmt(total);
+  document.getElementById('t-transfer').textContent=fmt(transfer);
+  document.getElementById('t-sbt').textContent=fmt(sbt);
+  document.getElementById('t-stamp').textContent=fmt(stamp);
+  document.getElementById('t-wht').textContent=fmt(wht);
+  document.getElementById('t-seller').textContent=fmt(sellerCost);
+  document.getElementById('t-buyer').textContent=fmt(buyerCost);
+}
+['t-price','t-years','t-burden','t-primary'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',calcTax);
+  document.getElementById(id).addEventListener('change',calcTax);
+});
+calcTax();
+
+/* ============ PORTFOLIO ============ */
+let portfolio=[
+  {name:'Noble Reveal Thonglor',area:'Thonglor',price:14000000,rent:35000},
+  {name:'Aspire Ari',area:'Ari',price:6500000,rent:18000},
+  {name:'Ideo Mobi On Nut',area:'On Nut',price:4200000,rent:13000}
+];
+function renderPortfolio(){
+  const tb=document.getElementById('port-body');
+  tb.innerHTML=portfolio.map((p,i)=>{
+    const yieldP=p.price?((p.rent*12*0.85-p.price*0.005)/p.price*100):0;
+    const cf=p.rent*12*0.85-p.price*0.005;
+    return `<tr>
+      <td><input type="text" value="${p.name}" data-i="${i}" data-k="name" style="background:none;border:none;color:var(--text-primary);font-family:inherit;font-size:12.5px;width:100%"></td>
+      <td><input type="text" value="${p.area}" data-i="${i}" data-k="area" style="background:none;border:none;color:var(--text-secondary);font-family:inherit;font-size:12.5px;width:100%"></td>
+      <td class="num"><input type="number" value="${p.price}" data-i="${i}" data-k="price" style="background:none;border:none;color:var(--text-primary);font-family:var(--font-mono);font-size:12.5px;width:100%;text-align:right"></td>
+      <td class="num"><input type="number" value="${p.rent}" data-i="${i}" data-k="rent" style="background:none;border:none;color:var(--text-primary);font-family:var(--font-mono);font-size:12.5px;width:100%;text-align:right"></td>
+      <td class="num ${yieldP>=5?'up':yieldP>=3.5?'':'down'}">${yieldP.toFixed(2)}%</td>
+      <td class="num ${cf>0?'up':'down'}">${fmtSign(cf)}</td>
+      <td><button class="btn btn-danger" data-del="${i}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></td>
+    </tr>`;
+  }).join('');
+  // Bind input changes
+  tb.querySelectorAll('input').forEach(inp=>{
+    inp.addEventListener('input',()=>{
+      const i=+inp.dataset.i,k=inp.dataset.k;
+      portfolio[i][k]=k==='price'||k==='rent'?+inp.value:inp.value;
+      updateTotals();
+    });
+  });
+  tb.querySelectorAll('[data-del]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      portfolio.splice(+btn.dataset.del,1);renderPortfolio();
+    });
+  });
+  updateTotals();
+}
+function updateTotals(){
+  const totalVal=portfolio.reduce((s,p)=>s+p.price,0);
+  const totalRent=portfolio.reduce((s,p)=>s+p.rent*12,0);
+  const totalCF=portfolio.reduce((s,p)=>s+(p.rent*12*0.85-p.price*0.005),0);
+  const avgYield=totalVal?((totalCF/totalVal)*100).toFixed(2)+'%':'—';
+  document.getElementById('p-value').textContent=fmt(totalVal);
+  document.getElementById('p-rent').textContent=fmt(totalRent);
+  document.getElementById('p-yield').textContent=avgYield;
+  document.getElementById('p-cf').textContent=fmt(totalCF);
+}
+document.getElementById('add-row').addEventListener('click',()=>{
+  portfolio.push({name:'New Property',area:'—',price:5000000,rent:15000});renderPortfolio();
+});
+renderPortfolio();
+
+/* ============ HPI CHART ============ */
+function drawLine(svgId,data,opts={}){
+  const svg=document.getElementById(svgId);
+  if(!svg)return;
+  const w=600,h=240,pad={t:20,r:20,b:30,l:42};
+  const min=opts.min!==undefined?opts.min:Math.min(...data.flat().filter(v=>typeof v==='number'));
+  const max=opts.max!==undefined?opts.max:Math.max(...data.flat().filter(v=>typeof v==='number'));
+  const xN=data[0].length;
+  const x=i=>pad.l+(i/(xN-1))*(w-pad.l-pad.r);
+  const y=v=>pad.t+(1-(v-min)/(max-min))*(h-pad.t-pad.b);
+  const labels=opts.labels||[];
+
+  let html='';
+  // Grid lines
+  for(let i=0;i<=4;i++){
+    const yy=pad.t+(i/4)*(h-pad.t-pad.b);
+    const val=max-(i/4)*(max-min);
+    html+=`<line x1="${pad.l}" y1="${yy}" x2="${w-pad.r}" y2="${yy}" stroke="#E5DFD2" stroke-width="1"/>`;
+    html+=`<text x="${pad.l-8}" y="${yy+3}" font-family="JetBrains Mono" font-size="9" fill="#9A9A95" text-anchor="end">${opts.fmt?opts.fmt(val):val.toFixed(0)}</text>`;
+  }
+  // X labels
+  if(labels.length){
+    const step=Math.ceil(xN/6);
+    for(let i=0;i<xN;i+=step){
+      html+=`<text x="${x(i)}" y="${h-pad.b+14}" font-family="JetBrains Mono" font-size="9" fill="#9A9A95" text-anchor="middle">${labels[i]}</text>`;
+    }
+  }
+  // Confidence band (if 3 series)
+  if(data.length>=3){
+    const upper=data[1],lower=data[2];
+    let bandPath=`M ${x(0)} ${y(upper[0])}`;
+    for(let i=1;i<xN;i++)bandPath+=` L ${x(i)} ${y(upper[i])}`;
+    for(let i=xN-1;i>=0;i--)bandPath+=` L ${x(i)} ${y(lower[i])}`;
+    bandPath+=' Z';
+    html+=`<path d="${bandPath}" fill="rgba(47,93,80,0.08)" stroke="rgba(47,93,80,0.2)" stroke-width="1" stroke-dasharray="3,3"/>`;
+  }
+  // National avg as dashed
+  if(opts.secondary){
+    const sec=opts.secondary;
+    let p=`M ${x(0)} ${y(sec[0])}`;
+    for(let i=1;i<xN;i++)p+=` L ${x(i)} ${y(sec[i])}`;
+    html+=`<path d="${p}" fill="none" stroke="#4A7B8B" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.7"/>`;
+  }
+  // Main line + area gradient
+  const main=data[0];
+  let path=`M ${x(0)} ${y(main[0])}`;
+  for(let i=1;i<xN;i++){
+    const cpx1=x(i-1)+(x(i)-x(i-1))/2;
+    const cpy1=y(main[i-1]);
+    const cpx2=x(i-1)+(x(i)-x(i-1))/2;
+    const cpy2=y(main[i]);
+    path+=` C ${cpx1} ${cpy1}, ${cpx2} ${cpy2}, ${x(i)} ${y(main[i])}`;
+  }
+  const areaPath=path+` L ${x(xN-1)} ${h-pad.b} L ${x(0)} ${h-pad.b} Z`;
+  html+=`<defs>
+    <linearGradient id="${svgId}-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2F5D50" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#2F5D50" stop-opacity="0"/>
+    </linearGradient>
+  </defs>`;
+  html+=`<path d="${areaPath}" fill="url(#${svgId}-grad)"/>`;
+  html+=`<path d="${path}" fill="none" stroke="#2F5D50" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`;
+  // Last dot
+  html+=`<circle cx="${x(xN-1)}" cy="${y(main[xN-1])}" r="4" fill="#2F5D50" stroke="#FFFFFF" stroke-width="2"/>`;
+  html+=`<circle cx="${x(xN-1)}" cy="${y(main[xN-1])}" r="9" fill="#2F5D50" opacity="0.2"/>`;
+
+  svg.innerHTML=html;
+}
+
+const months=['Apr 24','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan 25','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan 26','Feb','Mar'];
+const hpi=[100,100.4,101.1,101.8,102.2,102.6,103.4,103.8,104.5,104.9,105.4,105.8,106.2,106.6,107.1,107.4,107.8,108.2,108.5,108.7,108.9,109.2,109.5,109.7];
+const hpiUp=hpi.map(v=>v+1.4);
+const hpiLow=hpi.map(v=>v-1.2);
+const hpiNat=[100,100.2,100.5,100.7,101.0,101.2,101.5,101.7,102.0,102.2,102.5,102.7,103.0,103.2,103.4,103.6,103.8,104.0,104.2,104.3,104.5,104.7,104.9,105.0];
+drawLine('chart-hpi',[hpi,hpiUp,hpiLow],{labels:months,secondary:hpiNat,min:98,max:112,fmt:v=>v.toFixed(0)});
+
+/* ============ TAKE-UP CHART ============ */
+function drawTakeup(){
+  const svg=document.getElementById('chart-takeup');
+  if(!svg)return;
+  const w=600,h=240,pad={t:20,r:42,b:30,l:42};
+  const months12=['May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr'];
+  const takeup=[68,71,72,70,73,75,76,74,77,76,78,78];
+  const supply=[1200,1100,1350,1280,1400,1500,1620,1550,1480,1700,1650,1750];
+  const xN=months12.length;
+  const xx=i=>pad.l+(i/(xN-1))*(w-pad.l-pad.r);
+  const y1=v=>pad.t+(1-(v-60)/30)*(h-pad.t-pad.b);
+  const sMax=2000,sMin=1000;
+  const y2=v=>pad.t+(1-(v-sMin)/(sMax-sMin))*(h-pad.t-pad.b);
+
+  let html='';
+  for(let i=0;i<=4;i++){
+    const yy=pad.t+(i/4)*(h-pad.t-pad.b);
+    const val=90-(i/4)*30;
+    html+=`<line x1="${pad.l}" y1="${yy}" x2="${w-pad.r}" y2="${yy}" stroke="#E5DFD2" stroke-width="1"/>`;
+    html+=`<text x="${pad.l-8}" y="${yy+3}" font-family="JetBrains Mono" font-size="9" fill="#9A9A95" text-anchor="end">${val.toFixed(0)}%</text>`;
+    const valR=2000-(i/4)*1000;
+    html+=`<text x="${w-pad.r+6}" y="${yy+3}" font-family="JetBrains Mono" font-size="9" fill="#9A9A95" text-anchor="start">${(valR/1000).toFixed(1)}k</text>`;
+  }
+  for(let i=0;i<xN;i+=2){
+    html+=`<text x="${xx(i)}" y="${h-pad.b+14}" font-family="JetBrains Mono" font-size="9" fill="#9A9A95" text-anchor="middle">${months12[i]}</text>`;
+  }
+  // Bars (supply)
+  const bw=(w-pad.l-pad.r)/xN*0.5;
+  supply.forEach((v,i)=>{
+    const bh=h-pad.b-y2(v);
+    html+=`<rect x="${xx(i)-bw/2}" y="${y2(v)}" width="${bw}" height="${bh}" fill="#C4943A" opacity="0.35" rx="2"/>`;
+  });
+  // Line (takeup)
+  let path=`M ${xx(0)} ${y1(takeup[0])}`;
+  for(let i=1;i<xN;i++){
+    const cpx1=xx(i-1)+(xx(i)-xx(i-1))/2;
+    path+=` C ${cpx1} ${y1(takeup[i-1])}, ${cpx1} ${y1(takeup[i])}, ${xx(i)} ${y1(takeup[i])}`;
+  }
+  html+=`<path d="${path}" fill="none" stroke="#2F5D50" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`;
+  takeup.forEach((v,i)=>{
+    html+=`<circle cx="${xx(i)}" cy="${y1(v)}" r="3" fill="#2F5D50" stroke="#FFFFFF" stroke-width="1.5"/>`;
+  });
+  svg.innerHTML=html;
+}
+drawTakeup();
+
+/* ============ ARCHETYPE SCATTER ============ */
+function drawScatter(){
+  const svg=document.getElementById('chart-scatter');
+  if(!svg)return;
+  const w=600,h=280,pad={t:20,r:20,b:36,l:50};
+  // x = price ฿/sqm, y = deviation from baseline %
+  const cats=[
+    {label:'Studio',color:'#7C5BA8',data:[[85,-12],[92,-8],[98,-5],[105,2],[110,8],[88,-15]]},
+    {label:'1BR Std',color:'#2F5D50',data:[[125,-3],[140,-1],[155,3],[148,-2],[165,5],[172,8],[138,-5],[160,4]]},
+    {label:'2BR Premium',color:'#4A7B8B',data:[[170,-2],[185,4],[195,6],[210,10],[180,-1],[200,8]]},
+    {label:'Penthouse',color:'#C4943A',data:[[220,12],[245,18],[270,22],[290,28]]}
+  ];
+  const xMin=70,xMax=320;
+  const yMin=-25,yMax=35;
+  const xx=v=>pad.l+(v-xMin)/(xMax-xMin)*(w-pad.l-pad.r);
+  const yy=v=>pad.t+(1-(v-yMin)/(yMax-yMin))*(h-pad.t-pad.b);
+
+  let html='';
+  // Grid
+  for(let i=0;i<=4;i++){
+    const yp=pad.t+(i/4)*(h-pad.t-pad.b);
+    const val=yMax-(i/4)*(yMax-yMin);
+    html+=`<line x1="${pad.l}" y1="${yp}" x2="${w-pad.r}" y2="${yp}" stroke="#E5DFD2"/>`;
+    html+=`<text x="${pad.l-8}" y="${yp+3}" font-size="9" font-family="JetBrains Mono" fill="#9A9A95" text-anchor="end">${val>0?'+':''}${val.toFixed(0)}%</text>`;
+  }
+  for(let i=0;i<=5;i++){
+    const xp=pad.l+(i/5)*(w-pad.l-pad.r);
+    const val=xMin+(i/5)*(xMax-xMin);
+    html+=`<line x1="${xp}" y1="${pad.t}" x2="${xp}" y2="${h-pad.b}" stroke="#E5DFD2" opacity="0.5"/>`;
+    html+=`<text x="${xp}" y="${h-pad.b+14}" font-size="9" font-family="JetBrains Mono" fill="#9A9A95" text-anchor="middle">฿${val.toFixed(0)}K</text>`;
+  }
+  // Baseline at y=0
+  html+=`<line x1="${pad.l}" y1="${yy(0)}" x2="${w-pad.r}" y2="${yy(0)}" stroke="#2F5D50" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6"/>`;
+  html+=`<text x="${w-pad.r-4}" y="${yy(0)-4}" font-size="9" font-family="JetBrains Mono" fill="#2F5D50" text-anchor="end" opacity="0.8">baseline</text>`;
+  // Axis labels
+  html+=`<text x="${w/2}" y="${h-4}" font-size="10" fill="#6B6B68" text-anchor="middle">Price ฿/sqm</text>`;
+  html+=`<text x="${pad.l-30}" y="${h/2}" font-size="10" fill="#6B6B68" text-anchor="middle" transform="rotate(-90 ${pad.l-30} ${h/2})">Deviation %</text>`;
+  // Points
+  cats.forEach(c=>{
+    c.data.forEach(([px,py])=>{
+      html+=`<circle cx="${xx(px)}" cy="${yy(py)}" r="5" fill="${c.color}" opacity="0.85" stroke="${c.color}" stroke-width="0.5">
+        <title>${c.label} · ฿${px}K · ${py>0?'+':''}${py}%</title>
+      </circle>`;
+      html+=`<circle cx="${xx(px)}" cy="${yy(py)}" r="9" fill="${c.color}" opacity="0.15"/>`;
+    });
+  });
+  svg.innerHTML=html;
+}
+drawScatter();
+
+/* ============ DOM BARS ============ */
+const domData=[
+  {name:'Asok',val:55,max:120},
+  {name:'Thonglor',val:62,max:120},
+  {name:'Phrom Phong',val:58,max:120},
+  {name:'Ari',val:71,max:120},
+  {name:'Phaya Thai',val:75,max:120},
+  {name:'Ratchada',val:84,max:120},
+  {name:'On Nut',val:88,max:120},
+  {name:'Bang Sue',val:108,max:120}
+];
+document.getElementById('dom-bars').innerHTML=domData.map(d=>`
+  <div class="dom-row">
+    <div class="name">${d.name}</div>
+    <div class="track"><div class="fill" style="width:${(d.val/d.max)*100}%;${d.val>80?'background:linear-gradient(90deg,#C4943A,#A85541)':''}"></div></div>
+    <div class="num">${d.val}d</div>
+  </div>
+`).join('');
+
+/* ============ ESC KEY ============ */
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    sidebar.classList.remove('open');overlay.classList.remove('show');
+  }
+});
+
+/* ============ Resize map after layout settles ============ */
+window.addEventListener('load',()=>{setTimeout(()=>{if(map)map.invalidateSize()},200)});
+
+}catch(e){
+  console.error('[propdecoded] Investor init error:', e.message, '\n', e.stack);
+}
+};
 </script>
 </body>
 </html>
