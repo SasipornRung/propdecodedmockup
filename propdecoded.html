@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CondoSwift by PropDecoded — ค้นหาห้องเช่า</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F7F5EF;
+  --surface:#FFFFFF;
+  --surface-2:#F1ECE0;
+  --surface-3:#FAF8F2;
+  --ink:#1F2421;
+  --ink-soft:#3F4744;
+  --muted:#6B6B68;
+  --dim:#9A9A95;
+  --line:#E5DFD2;
+  --line-strong:#D2C9B7;
+  --primary:#2F5D50;
+  --primary-hover:#234A40;
+  --primary-soft:#E6EFEB;
+  --accent:#C4633A;
+  --accent-soft:#FBE8DC;
+  --good:#2F7A4F;
+  --warn:#8C6920;
+  --warn-soft:#FBF1D6;
+  --bad:#A85541;
+  --bad-soft:#F4DDD8;
+  --shadow-sm:0 1px 2px rgba(31,36,33,0.04),0 1px 3px rgba(31,36,33,0.05);
+  --shadow-md:0 4px 14px rgba(31,36,33,0.06),0 2px 4px rgba(31,36,33,0.04);
+  --shadow-lg:0 12px 32px rgba(31,36,33,0.08);
+  --font-display:'Bai Jamjuree','IBM Plex Sans Thai',system-ui,sans-serif;
+  --font-body:'IBM Plex Sans Thai','Bai Jamjuree',system-ui,sans-serif;
+  --header-h:118px;
+  --radius:10px;
+  --radius-lg:14px;
+}
+html,body{height:100%}
+body{
+  font-family:var(--font-body);
+  font-size:14px;line-height:1.55;
+  color:var(--ink);background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:10px;border:2px solid var(--bg)}
+
+/* ============ HEADER ============ */
+.site-header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.header-top{
+  max-width:1320px;margin:0 auto;
+  display:flex;align-items:center;gap:18px;
+  padding:16px 24px;
+}
+.brand-mark-row{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;flex-shrink:0}
+.brand-mark{
+  width:42px;height:42px;border-radius:10px;
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-hover) 100%);
+  color:#fff;display:grid;place-items:center;
+  font-family:var(--font-display);font-weight:700;font-size:16px;letter-spacing:-0.02em;
+  box-shadow:0 0 0 1px rgba(47,93,80,0.15),0 4px 14px rgba(47,93,80,0.18);
+}
+.brand-text .name{
+  font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:-0.01em;
+  color:var(--ink);
+}
+.brand-text .name .by{font-weight:400;font-size:12px;opacity:0.55;margin-left:4px}
+.brand-text .tag{font-size:11px;color:var(--muted);margin-top:1px}
+
+.lens-nav{
+  margin-left:auto;display:flex;gap:4px;
+  background:var(--surface-2);border:1px solid var(--line);
+  border-radius:10px;padding:3px;
+}
+.lens-btn{
+  background:none;border:none;cursor:pointer;
+  padding:7px 14px;border-radius:7px;
+  color:var(--muted);font-family:inherit;font-size:13px;font-weight:500;
+  transition:all 0.15s;
+}
+.lens-btn:hover{color:var(--ink)}
+.lens-btn.active{
+  background:var(--primary);color:#fff;font-weight:600;
+  box-shadow:0 0 0 1px rgba(47,93,80,0.2),0 2px 6px rgba(47,93,80,0.15);
+}
+
+/* ============ LAYOUT ============ */
+.shell{
+  max-width:1320px;margin:0 auto;
+  display:grid;grid-template-columns:280px 1fr;gap:24px;
+  padding:24px;align-items:start;
+}
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr;padding:16px;gap:16px}
+}
+
+/* ============ FILTER SIDEBAR ============ */
+.filter-sidebar{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:20px;
+  position:sticky;top:calc(var(--header-h) + 16px);
+  max-height:calc(100vh - var(--header-h) - 32px);
+  overflow-y:auto;
+  box-shadow:var(--shadow-sm);
+}
+@media (max-width:900px){
+  .filter-sidebar{
+    position:fixed;top:0;left:0;bottom:0;width:300px;max-width:85%;
+    z-index:200;border-radius:0;border:none;
+    transform:translateX(-100%);transition:transform 0.3s;
+    max-height:100vh;
+    box-shadow:8px 0 32px rgba(0,0,0,0.18);
+  }
+  .filter-sidebar.open{transform:translateX(0)}
+}
+.filter-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;
+}
+.filter-header h2{
+  font-family:var(--font-display);font-weight:600;font-size:16px;
+  color:var(--ink);
+}
+.filter-close{
+  display:none;background:none;border:none;cursor:pointer;
+  width:32px;height:32px;border-radius:8px;
+  color:var(--muted);font-size:20px;
+}
+@media (max-width:900px){.filter-close{display:grid;place-items:center}}
+
+.filter-section{margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.filter-section:last-of-type{border-bottom:none}
+.filter-h{
+  font-size:11px;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;
+  display:flex;align-items:center;gap:6px;
+}
+
+.price-inputs{
+  display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;
+}
+.price-inputs input{
+  width:100%;height:38px;border:1px solid var(--line);border-radius:8px;
+  background:var(--surface-3);font-family:inherit;font-size:13px;
+  color:var(--ink);padding:0 10px;
+}
+.price-inputs input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+.price-inputs .dash{color:var(--dim);font-size:14px}
+
+.radio-row,.check-row{
+  display:flex;align-items:center;gap:10px;
+  padding:6px 8px;border-radius:6px;cursor:pointer;
+  font-size:13px;color:var(--ink-soft);
+  transition:background 0.12s;
+}
+.radio-row:hover,.check-row:hover{background:var(--surface-2)}
+.radio-row input,.check-row input{
+  margin:0;width:16px;height:16px;accent-color:var(--primary);cursor:pointer;flex-shrink:0;
+}
+.radio-row input:checked + span,
+.check-row input:checked + span{color:var(--primary);font-weight:500}
+
+.filter-actions{display:flex;gap:8px;margin-top:6px}
+.btn-search,.btn-reset{
+  flex:1;height:40px;border-radius:8px;
+  font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;
+  transition:all 0.15s;border:1px solid transparent;
+}
+.btn-search{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn-search:hover{background:var(--primary-hover);border-color:var(--primary-hover)}
+.btn-reset{background:var(--surface-2);color:var(--ink-soft);border-color:var(--line)}
+.btn-reset:hover{background:var(--surface);border-color:var(--line-strong);color:var(--ink)}
+
+/* ============ MAIN COLUMN ============ */
+.main-col{min-width:0}
+.search-row{
+  position:relative;margin-bottom:16px;
+}
+.search-row svg{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  color:var(--muted);
+}
+.search-input{
+  width:100%;height:46px;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:0 16px 0 44px;font-family:inherit;font-size:14px;color:var(--ink);
+  box-shadow:var(--shadow-sm);
+}
+.search-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+.search-input::placeholder{color:var(--dim)}
+
+.results-actions{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin-bottom:16px;flex-wrap:wrap;
+}
+.result-count{font-size:14px;color:var(--ink-soft)}
+.result-count strong{color:var(--primary);font-weight:600}
+.actions-right{display:flex;align-items:center;gap:10px}
+.sort-select{
+  height:38px;background:var(--surface);border:1px solid var(--line);
+  border-radius:8px;padding:0 12px;font-family:inherit;font-size:13px;color:var(--ink);
+  cursor:pointer;
+}
+.sort-select:focus{outline:none;border-color:var(--primary)}
+.btn-map{
+  display:inline-flex;align-items:center;gap:6px;
+  height:38px;padding:0 14px;border-radius:8px;
+  background:var(--surface);border:1px solid var(--line);
+  font-family:inherit;font-size:13px;font-weight:500;color:var(--ink-soft);cursor:pointer;
+}
+.btn-map:hover{border-color:var(--line-strong);color:var(--primary)}
+
+/* Mobile filter trigger */
+.mobile-filter-bar{
+  display:none;align-items:center;gap:10px;
+  padding:12px 16px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--radius);
+  margin-bottom:12px;position:sticky;top:calc(var(--header-h) + 8px);z-index:30;
+}
+@media (max-width:900px){.mobile-filter-bar{display:flex}}
+.mobile-filter-trigger{
+  display:flex;align-items:center;gap:6px;
+  background:none;border:1px solid var(--line);
+  border-radius:8px;padding:7px 12px;cursor:pointer;
+  font-family:inherit;font-size:13px;color:var(--ink-soft);font-weight:500;
+}
+.active-count{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:18px;height:18px;padding:0 5px;border-radius:9px;
+  background:var(--primary);color:#fff;font-size:10px;font-weight:700;
+}
+.active-count[data-n="0"]{display:none}
+
+/* ============ LISTING CARDS ============ */
+.listings-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:18px;
+}
+@media (min-width:1100px){.listings-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:600px){.listings-grid{grid-template-columns:1fr;gap:14px}}
+
+.listing-card{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;
+  box-shadow:var(--shadow-sm);transition:all 0.18s;
+  display:flex;flex-direction:column;
+}
+.listing-card:hover{
+  border-color:var(--line-strong);
+  box-shadow:var(--shadow-md);
+  transform:translateY(-2px);
+}
+.card-image{
+  position:relative;height:180px;
+  background:var(--surface-2) center/cover no-repeat;
+}
+.fresh-pill{
+  position:absolute;top:12px;left:12px;
+  padding:4px 10px;border-radius:99px;
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(6px);
+  font-size:10.5px;font-weight:600;color:var(--ink-soft);
+  letter-spacing:0.02em;
+}
+.fresh-pill.is-fresh{background:var(--primary);color:#fff}
+.card-body{padding:16px;flex:1;display:flex;flex-direction:column}
+.card-title{
+  font-family:var(--font-display);font-weight:600;font-size:16px;
+  letter-spacing:-0.01em;color:var(--ink);margin-bottom:4px;
+  line-height:1.3;
+}
+.card-loc{font-size:12.5px;color:var(--muted);margin-bottom:10px}
+.card-meta{
+  display:flex;flex-wrap:wrap;gap:10px;
+  font-size:12px;color:var(--ink-soft);margin-bottom:10px;
+}
+.card-meta span{display:inline-flex;align-items:center;gap:4px}
+.card-amenities{
+  display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;
+}
+.amen{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 8px;border-radius:99px;
+  background:var(--surface-2);font-size:11px;color:var(--ink-soft);
+  position:relative;
+}
+.amen.no{opacity:0.55}
+.amen.no::after{
+  content:"";position:absolute;left:6px;right:6px;top:50%;
+  height:1.5px;background:var(--bad);transform:rotate(-12deg);
+}
+.card-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  margin-top:auto;padding-top:12px;border-top:1px solid var(--line);
+}
+.price-row .v{
+  font-family:var(--font-display);font-weight:700;font-size:18px;
+  color:var(--primary);letter-spacing:-0.01em;
+}
+.price-row .u{font-size:11px;color:var(--muted);margin-left:2px}
+.card-cta{
+  font-size:12px;font-weight:600;color:var(--primary);
+  background:var(--primary-soft);border:1px solid rgba(47,93,80,0.15);
+  padding:6px 12px;border-radius:8px;cursor:pointer;
+  transition:all 0.15s;font-family:inherit;
+}
+.card-cta:hover{background:var(--primary);color:#fff}
+
+.empty-state{
+  grid-column:1/-1;
+  text-align:center;padding:60px 20px;
+  background:var(--surface);border:1px dashed var(--line-strong);
+  border-radius:var(--radius-lg);
+}
+.e-icon{font-size:48px;margin-bottom:12px;opacity:0.6}
+.empty-state h3{
+  font-family:var(--font-display);font-weight:600;font-size:18px;
+  color:var(--ink);margin-bottom:6px;
+}
+.empty-state p{color:var(--muted);font-size:13px;max-width:340px;margin:0 auto}
+
+/* ============ MODAL ============ */
+.modal-backdrop{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(31,36,33,0.55);backdrop-filter:blur(4px);
+  display:none;align-items:flex-start;justify-content:center;
+  padding:40px 16px;overflow-y:auto;
+}
+.modal-backdrop.open{display:flex}
+.modal-card{
+  background:var(--surface);border-radius:var(--radius-lg);
+  max-width:780px;width:100%;
+  box-shadow:var(--shadow-lg);
+  position:relative;animation:modalIn 0.25s;
+}
+@keyframes modalIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal-close{
+  position:absolute;top:12px;right:12px;z-index:2;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(6px);
+  border:1px solid var(--line);cursor:pointer;
+  font-size:18px;color:var(--ink-soft);
+  display:grid;place-items:center;
+}
+.modal-photos{
+  display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:4px;
+  height:300px;
+}
+.modal-photo{background:var(--surface-2) center/cover no-repeat}
+.modal-photo:first-child{grid-row:1/3}
+.modal-content{padding:24px}
+.modal-title{
+  font-family:var(--font-display);font-weight:700;font-size:22px;
+  letter-spacing:-0.01em;margin-bottom:4px;
+}
+.modal-loc{color:var(--muted);font-size:13px;margin-bottom:16px}
+.price-strip{
+  background:var(--primary-soft);border:1px solid rgba(47,93,80,0.15);
+  border-radius:10px;padding:14px 16px;margin-bottom:20px;
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.price-strip .price{
+  font-family:var(--font-display);font-weight:700;font-size:24px;
+  color:var(--primary);letter-spacing:-0.01em;
+}
+.price-strip .price small{font-size:12px;color:var(--muted);font-weight:400;margin-left:4px}
+.price-strip .deposit{font-size:12px;color:var(--ink-soft)}
+.section{margin-bottom:18px}
+.section h4{
+  font-family:var(--font-display);font-weight:600;font-size:13px;
+  text-transform:uppercase;letter-spacing:0.06em;
+  color:var(--muted);margin-bottom:10px;
+}
+.kv-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+}
+.kv{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:8px 12px;background:var(--surface-3);border:1px solid var(--line);
+  border-radius:8px;font-size:13px;
+}
+.kv .k{color:var(--muted)}
+.kv .v{color:var(--ink);font-weight:500;text-align:right}
+.policy-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+}
+@media (max-width:600px){.policy-grid{grid-template-columns:1fr}}
+.policy-card{
+  padding:12px;border-radius:10px;
+  background:var(--surface-3);border:1px solid var(--line);
+  text-align:center;
+}
+.policy-card.yes{background:rgba(47,122,79,0.08);border-color:rgba(47,122,79,0.2)}
+.policy-card.no{background:rgba(168,85,65,0.08);border-color:rgba(168,85,65,0.2)}
+.policy-card .em{font-size:22px;margin-bottom:4px}
+.policy-card .label{font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.policy-card.yes .label{color:var(--good)}
+.policy-card.no .label{color:var(--bad)}
+.policy-card .desc{font-size:11px;color:var(--muted);line-height:1.4}
+.appliances-list{display:flex;flex-wrap:wrap;gap:6px}
+.appliances-list span{
+  padding:5px 10px;border-radius:99px;
+  background:var(--surface-2);font-size:12px;color:var(--ink-soft);
+}
+.know-list{
+  background:var(--warn-soft);border:1px solid rgba(140,105,32,0.2);
+  border-radius:10px;padding:14px 16px;
+}
+.know-list ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.know-list li{
+  font-size:12.5px;color:var(--ink-soft);padding-left:18px;position:relative;line-height:1.5;
+}
+.know-list li::before{content:"•";position:absolute;left:6px;color:var(--warn);font-weight:700}
+.contact-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  margin-top:18px;
+}
+@media (max-width:480px){.contact-row{grid-template-columns:1fr}}
+.contact-btn{
+  height:42px;border-radius:8px;border:none;cursor:pointer;
+  font-family:inherit;font-size:13px;font-weight:600;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  transition:all 0.15s;
+}
+.contact-call{background:var(--primary);color:#fff}
+.contact-call:hover{background:var(--primary-hover)}
+.contact-line{background:#06C755;color:#fff}
+.contact-line:hover{background:#05a346}
+.contact-msg{background:var(--surface-2);color:var(--ink-soft);border:1px solid var(--line)}
+.contact-msg:hover{background:var(--surface-3)}
+
+/* Sidebar overlay */
+.sidebar-overlay{
+  display:none;position:fixed;inset:0;z-index:150;
+  background:rgba(31,36,33,0.4);backdrop-filter:blur(2px);
+}
+.sidebar-overlay.show{display:block}
+
+/* ============ FOOTER ============ */
+.site-footer{
+  background:var(--surface-2);border-top:1px solid var(--line);
+  padding:24px;text-align:center;font-size:12px;color:var(--muted);
+  margin-top:40px;
+}
+.site-footer .fb{
+  font-family:var(--font-display);font-weight:600;color:var(--ink);font-size:14px;
+  margin-bottom:4px;
+}
+.site-footer .disclaimer{max-width:580px;margin:0 auto;line-height:1.55}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="header-top">
+    <a href="#" class="brand-mark-row">
+      <span class="brand-mark">CS</span>
+      <span class="brand-text">
+        <div class="name">CondoSwift<span class="by">by PropDecoded</span></div>
+        <div class="tag">ค้นหาห้องเช่าแบบเข้าใจง่าย</div>
+      </span>
+    </a>
+    <nav class="lens-nav" role="tablist">
+      <button class="lens-btn active" type="button">ผู้เช่า</button>
+      <button class="lens-btn" type="button">นักลงทุน</button>
+      <button class="lens-btn" type="button">วิเคราะห์พื้นที่</button>
+      <button class="lens-btn" type="button">ติดต่อเรา</button>
+    </nav>
+  </div>
+</header>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="shell">
+
+  <!-- ============ FILTER SIDEBAR ============ -->
+  <aside class="filter-sidebar" id="filterSidebar">
+    <div class="filter-header">
+      <h2>ตัวกรอง</h2>
+      <button class="filter-close" id="filterClose" type="button" aria-label="ปิดตัวกรอง">✕</button>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-h">ช่วงราคา (บาท/เดือน)</div>
+      <div class="price-inputs">
+        <input type="number" id="priceMin" placeholder="ต่ำสุด" min="0" step="500" autocomplete="off">
+        <span class="dash">–</span>
+        <input type="number" id="priceMax" placeholder="สูงสุด" min="0" step="500" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-h">ประเภทห้อง</div>
+      <label class="radio-row"><input type="radio" name="type" value="all" checked><span>ไม่ระบุ</span></label>
+      <label class="radio-row"><input type="radio" name="type" value="Studio"><span>Studio</span></label>
+      <label class="radio-row"><input type="radio" name="type" value="1 Bedroom"><span>1 Bedroom</span></label>
+      <label class="radio-row"><input type="radio" name="type" value="2 Bedroom"><span>2 Bedroom</span></label>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-h">ขนาดห้อง</div>
+      <label class="radio-row"><input type="radio" name="size" value="all" checked><span>ไม่ระบุ</span></label>
+      <label class="radio-row"><input type="radio" name="size" value="0-25"><span>ต่ำกว่า 25 ตร.ม.</span></label>
+      <label class="radio-row"><input type="radio" name="size" value="25-35"><span>25 – 35 ตร.ม.</span></label>
+      <label class="radio-row"><input type="radio" name="size" value="35-50"><span>35 – 50 ตร.ม.</span></label>
+      <label class="radio-row"><input type="radio" name="size" value="50-999"><span>50 ตร.ม. ขึ้นไป</span></label>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-h">🐾 เลี้ยงสัตว์</div>
+      <label class="radio-row"><input type="radio" name="pet" value="all" checked><span>ไม่ระบุ</span></label>
+      <label class="radio-row"><input type="radio" name="pet" value="yes"><span>เลี้ยงได้</span></label>
+      <label class="radio-row"><input type="radio" name="pet" value="no"><span>เลี้ยงไม่ได้</span></label>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-h">🍳 ทำอาหาร</div>
+      <label class="radio-row"><input type="radio" name="cook" value="all" checked><span>ไม่ระบุ</span></label>
+      <label class="radio-row"><input type="radio" name="cook" value="yes"><span>ทำได้</span></label>
+      <label class="radio-row"><input type="radio" name="cook" value="no"><span>ทำไม่ได้</span></label>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-h">🚗 ที่จอดรถ</div>
+      <label class="radio-row"><input type="radio" name="parking" value="all" checked><span>ไม่ระบุ</span></label>
+      <label class="radio-row"><input type="radio" name="parking" value="yes"><span>มีที่จอดรถ</span></label>
+      <label class="radio-row"><input type="radio" name="parking" value="no"><span>ไม่มีที่จอดรถ</span></label>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-h">เพิ่มเติม</div>
+      <label class="check-row"><input type="checkbox" id="nearBts"><span>🚆 ใกล้ BTS/MRT (≤10 นาที)</span></label>
+      <label class="check-row"><input type="checkbox" id="furnished"><span>🛋 เฟอร์นิเจอร์ครบครัน</span></label>
+    </div>
+
+    <div class="filter-actions">
+      <button class="btn-search" id="btnSearch" type="button">ค้นหา</button>
+      <button class="btn-reset" id="btnReset" type="button">รีเซ็ต</button>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN COLUMN ============ -->
+  <main class="main-col">
+
+    <div class="search-row">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="search" class="search-input" id="searchInput" placeholder="ค้นหาด้วยย่าน, สถานี, ชื่อโครงการ..." autocomplete="off">
+    </div>
+
+    <!-- Mobile filter trigger bar -->
+    <div class="mobile-filter-bar">
+      <button class="mobile-filter-trigger" id="openFilters" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+        ตัวกรอง <span class="active-count" id="activeCount" data-n="0">0</span>
+      </button>
+      <select class="sort-select" id="sortSelectMobile" style="margin-left:auto">
+        <option value="updated">อัปเดตล่าสุด</option>
+        <option value="price-asc">ราคาต่ำสุด</option>
+        <option value="walk">ใกล้สถานีที่สุด</option>
+      </select>
+    </div>
+
+    <div class="results-actions">
+      <div class="result-count">พบ <strong id="resultCount">0</strong> ห้องเช่า</div>
+      <div class="actions-right">
+        <select class="sort-select" id="sortSelect">
+          <option value="updated">อัปเดตล่าสุด</option>
+          <option value="price-asc">ราคาต่ำสุด</option>
+          <option value="walk">ใกล้สถานีที่สุด</option>
+        </select>
+        <button class="btn-map" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+          แสดงแผนที่
+        </button>
+      </div>
+    </div>
+
+    <div class="listings-grid" id="listings"></div>
+
+  </main>
+</div>
+
+<!-- ============ MODAL ============ -->
+<div class="modal-backdrop" id="modal" role="dialog" aria-hidden="true">
+  <div class="modal-card" id="modalContent"></div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="fb">CondoSwift by PropDecoded</div>
+  <div class="disclaimer">
+    ข้อมูลห้องเช่าจากผู้ลงประกาศ — โปรดตรวจสอบรายละเอียดและเข้าชมห้องจริงก่อนตัดสินใจทำสัญญา · CondoSwift ไม่ใช่ตัวแทนนายหน้า
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   MOCK LISTING DATA — 8 listings
+   ============================================================ */
+const LISTINGS = [
+  {
+    id:1, name:"The Line Sukhumvit 71", area:"Ekkamai", district:"วัฒนา, กรุงเทพฯ",
+    station:"BTS เอกมัย", walkMin:6, rent:18000,
+    deposit:"เงินมัดจำ 2 เดือน + ล่วงหน้า 1 เดือน",
+    type:"1 Bedroom", size:32, floor:15,
+    pet:false, cook:true, parking:true, furnished:"ครบครัน",
+    available:"พร้อมเข้าอยู่ 1 พ.ค. 2569", minContract:"1 ปี",
+    water:"18 บาท/หน่วย", electric:"ตามมิเตอร์การไฟฟ้า", internet:"ผู้เช่าจัดการเอง",
+    appliances:["แอร์","ตู้เย็น","ไมโครเวฟ","เครื่องซักผ้า","ทีวี","เตาไฟฟ้า"],
+    updated:"2 วันที่แล้ว", updatedSort:2, fresh:false,
+    photo:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80",
+    photos:[
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=900&q=80",
+      "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=600&q=80",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&q=80",
+      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80",
+      "https://images.unsplash.com/photo-1565182999561-18d7dc61c393?w=600&q=80"
+    ]
+  },
+  {
+    id:2, name:"Ideo Mobi Sukhumvit 81", area:"On Nut", district:"พระโขนง, กรุงเทพฯ",
+    station:"BTS อ่อนนุช", walkMin:4, rent:12500,
+    deposit:"เงินมัดจำ 2 เดือน + ล่วงหน้า 1 เดือน",
+    type:"Studio", size:24, floor:8,
+    pet:false, cook:false, parking:true, furnished:"ครบครัน",
+    available:"พร้อมเข้าอยู่ทันที", minContract:"1 ปี",
+    water:"ตามมิเตอร์", electric:"ตามมิเตอร์การไฟฟ้า", internet:"Wi-Fi รวมในค่าเช่า",
+    appliances:["แอร์","ตู้เย็น","ไมโครเวฟ","เครื่องซักผ้า"],
+    updated:"วันนี้", updatedSort:0, fresh:true,
+    photo:"https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80",
+    photos:[
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=900&q=80",
+      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&q=80",
+      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=600&q=80",
+      "https://images.unsplash.com/photo-1556909172-89cbcd9a9ed7?w=600&q=80",
+      "https://images.unsplash.com/photo-1556909114-44e3e9399a2e?w=600&q=80"
+    ]
+  },
+  {
+    id:3, name:"Noble Reveal Thonglor", area:"Thonglor", district:"วัฒนา, กรุงเทพฯ",
+    station:"BTS ทองหล่อ", walkMin:8, rent:28000,
+    deposit:"เงินมัดจำ 2 เดือน + ล่วงหน้า 1 เดือน",
+    type:"1 Bedroom", size:38, floor:22,
+    pet:true, cook:true, parking:true, furnished:"ครบครัน",
+    available:"พร้อมเข้าอยู่ 15 พ.ค. 2569", minContract:"1 ปี",
+    water:"18 บาท/หน่วย", electric:"7 บาท/หน่วย", internet:"Wi-Fi รวมในค่าเช่า",
+    appliances:["แอร์","ตู้เย็น","ไมโครเวฟ","เครื่องซักผ้า","ทีวี","เตาไฟฟ้า","เครื่องดูดควัน","เครื่องอบผ้า"],
+    updated:"5 วันที่แล้ว", updatedSort:5, fresh:false,
+    photo:"https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80",
+    photos:[
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=900&q=80",
+      "https://images.unsplash.com/photo-1556912173-3bb406ef7e77?w=600&q=80",
+      "https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?w=600&q=80",
+      "https://images.unsplash.com/photo-1556909114-3f5cd4a2fa15?w=600&q=80",
+      "https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=600&q=80"
+    ]
+  },
+  {
+    id:4, name:"Lumpini Place Ratchada", area:"Ratchada", district:"ห้วยขวาง, กรุงเทพฯ",
+    station:"MRT ห้วยขวาง", walkMin:10, rent:9500,
+    deposit:"เงินมัดจำ 1 เดือน + ล่วงหน้า 1 เดือน",
+    type:"Studio", size:22, floor:5,
+    pet:false, cook:false, parking:true, furnished:"บางส่วน",
+    available:"พร้อมเข้าอยู่ทันที", minContract:"6 เดือน",
+    water:"ตามมิเตอร์", electric:"ตามมิเตอร์การไฟฟ้า", internet:"ผู้เช่าจัดการเอง",
+    appliances:["แอร์","ตู้เย็น","เครื่องซักผ้า"],
+    updated:"3 วันที่แล้ว", updatedSort:3, fresh:false,
+    photo:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80",
+    photos:[
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=900&q=80",
+      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&q=80",
+      "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=600&q=80",
+      "https://images.unsplash.com/photo-1522444690501-83e21bef0bba?w=600&q=80",
+      "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=600&q=80"
+    ]
+  },
+  {
+    id:5, name:"The Address Phrom Phong", area:"Phrom Phong", district:"คลองเตย, กรุงเทพฯ",
+    station:"BTS พร้อมพงษ์", walkMin:5, rent:35000,
+    deposit:"เงินมัดจำ 2 เดือน + ล่วงหน้า 1 เดือน",
+    type:"2 Bedroom", size:55, floor:18,
+    pet:true, cook:true, parking:true, furnished:"ครบครัน",
+    available:"พร้อมเข้าอยู่ 1 มิ.ย. 2569", minContract:"1 ปี",
+    water:"18 บาท/หน่วย", electric:"7 บาท/หน่วย", internet:"Wi-Fi รวมในค่าเช่า",
+    appliances:["แอร์","ตู้เย็น","ไมโครเวฟ","เครื่องซักผ้า","ทีวี","เตาไฟฟ้า","เครื่องดูดควัน","เครื่องอบผ้า","เตาอบ"],
+    updated:"1 วันที่แล้ว", updatedSort:1, fresh:false,
+    photo:"https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&q=80",
+    photos:[
+      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=900&q=80",
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&q=80",
+      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80",
+      "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=600&q=80",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&q=80"
+    ]
+  },
+  {
+    id:6, name:"Aspire Ari", area:"Ari", district:"พญาไท, กรุงเทพฯ",
+    station:"BTS อารีย์", walkMin:7, rent:14000,
+    deposit:"เงินมัดจำ 2 เดือน + ล่วงหน้า 1 เดือน",
+    type:"1 Bedroom", size:28, floor:12,
+    pet:false, cook:true, parking:false, furnished:"ครบครัน",
+    available:"พร้อมเข้าอยู่ทันที", minContract:"1 ปี",
+    water:"ตามมิเตอร์", electric:"ตามมิเตอร์การไฟฟ้า", internet:"Wi-Fi รวมในค่าเช่า",
+    appliances:["แอร์","ตู้เย็น","ไมโครเวฟ","เครื่องซักผ้า","ทีวี"],
+    updated:"วันนี้", updatedSort:0, fresh:true,
+    photo:"https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?w=800&q=80",
+    photos:[
+      "https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?w=900&q=80",
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&q=80",
+      "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=600&q=80",
+      "https://images.unsplash.com/photo-1556909172-89cbcd9a9ed7?w=600&q=80",
+      "https://images.unsplash.com/photo-1565182999561-18d7dc61c393?w=600&q=80"
+    ]
+  },
+  {
+    id:7, name:"Rhythm Ekkamai Estate", area:"Ekkamai", district:"วัฒนา, กรุงเทพฯ",
+    station:"BTS เอกมัย", walkMin:9, rent:22000,
+    deposit:"เงินมัดจำ 2 เดือน + ล่วงหน้า 1 เดือน",
+    type:"1 Bedroom", size:35, floor:19,
+    pet:true, cook:true, parking:true, furnished:"ครบครัน",
+    available:"พร้อมเข้าอยู่ 1 พ.ค. 2569", minContract:"1 ปี",
+    water:"18 บาท/หน่วย", electric:"7 บาท/หน่วย", internet:"Wi-Fi รวมในค่าเช่า",
+    appliances:["แอร์","ตู้เย็น","ไมโครเวฟ","เครื่องซักผ้า","ทีวี","เตาไฟฟ้า","เครื่องดูดควัน"],
+    updated:"4 วันที่แล้ว", updatedSort:4, fresh:false,
+    photo:"https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80",
+    photos:[
+      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=900&q=80",
+      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=600&q=80",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&q=80",
+      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&q=80",
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&q=80"
+    ]
+  },
+  {
+    id:8, name:"Whizdom Avenue Ratchada-Ladprao", area:"Ratchada", district:"จตุจักร, กรุงเทพฯ",
+    station:"MRT ลาดพร้าว", walkMin:12, rent:11500,
+    deposit:"เงินมัดจำ 2 เดือน + ล่วงหน้า 1 เดือน",
+    type:"1 Bedroom", size:30, floor:14,
+    pet:false, cook:true, parking:true, furnished:"ครบครัน",
+    available:"พร้อมเข้าอยู่ทันที", minContract:"1 ปี",
+    water:"ตามมิเตอร์", electric:"ตามมิเตอร์การไฟฟ้า", internet:"Wi-Fi รวมในค่าเช่า",
+    appliances:["แอร์","ตู้เย็น","ไมโครเวฟ","เครื่องซักผ้า","ทีวี","เตาไฟฟ้า"],
+    updated:"6 วันที่แล้ว", updatedSort:6, fresh:false,
+    photo:"https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800&q=80",
+    photos:[
+      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=900&q=80",
+      "https://images.unsplash.com/photo-1556909172-89cbcd9a9ed7?w=600&q=80",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&q=80",
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&q=80",
+      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80"
+    ]
+  }
+];
+
+/* ============================================================
+   STATE — defaults show ALL listings (no filtering active)
+   ============================================================ */
+const DEFAULT_STATE = {
+  priceMin: null,
+  priceMax: null,
+  type:    "all",
+  size:    "all",
+  pet:     "all",
+  cook:    "all",
+  parking: "all",
+  nearBts: false,
+  furnished: false,
+  search:  "",
+  sort:    "updated"
+};
+let state = Object.assign({}, DEFAULT_STATE);
+
+/* ============================================================
+   FILTER + SORT LOGIC
+   With defaults, filter() returns true for every item (no filter active).
+   ============================================================ */
+function applyFiltersAndSort() {
+  let result = LISTINGS.filter(item => {
+    if (state.search) {
+      const q = state.search.toLowerCase();
+      const haystack = (item.name + " " + item.area + " " + item.station + " " + item.district).toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
+    if (state.priceMin !== null && item.rent < state.priceMin) return false;
+    if (state.priceMax !== null && item.rent > state.priceMax) return false;
+    if (state.type !== "all" && item.type !== state.type) return false;
+    if (state.size !== "all") {
+      const [lo, hi] = state.size.split("-").map(Number);
+      if (item.size < lo || item.size > hi) return false;
+    }
+    if (state.pet === "yes" && !item.pet) return false;
+    if (state.pet === "no"  &&  item.pet) return false;
+    if (state.cook === "yes" && !item.cook) return false;
+    if (state.cook === "no"  &&  item.cook) return false;
+    if (state.parking === "yes" && !item.parking) return false;
+    if (state.parking === "no"  &&  item.parking) return false;
+    if (state.nearBts && item.walkMin > 10) return false;
+    if (state.furnished && item.furnished !== "ครบครัน") return false;
+    return true;
+  });
+
+  if (state.sort === "price-asc") result.sort((a,b) => a.rent - b.rent);
+  else if (state.sort === "walk")  result.sort((a,b) => a.walkMin - b.walkMin);
+  else                              result.sort((a,b) => a.updatedSort - b.updatedSort);
+
+  return result;
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function renderCard(item) {
+  const petClass     = item.pet     ? "" : "no";
+  const cookClass    = item.cook    ? "" : "no";
+  const parkingClass = item.parking ? "" : "no";
+  const furnClass    = (item.furnished === "ครบครัน") ? "" : "no";
+  return `
+    <article class="listing-card" data-id="${item.id}">
+      <div class="card-image" style="background-image:url('${item.photo}')">
+        <span class="fresh-pill ${item.fresh ? 'is-fresh' : ''}">${item.fresh ? '✨ ' : ''}อัปเดต ${item.updated}</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">${item.name}</h3>
+        <div class="card-loc">${item.area} · ${item.station} · เดิน ${item.walkMin} นาที</div>
+        <div class="card-meta">
+          <span>🛏 ${item.type}</span>
+          <span>📐 ${item.size} ตร.ม.</span>
+          <span>🏢 ชั้น ${item.floor}</span>
+        </div>
+        <div class="card-amenities">
+          <span class="amen ${petClass}">🐾</span>
+          <span class="amen ${cookClass}">🍳</span>
+          <span class="amen ${parkingClass}">🚗</span>
+          <span class="amen ${furnClass}">🛋</span>
+        </div>
+        <div class="card-foot">
+          <div class="price-row">
+            <span class="v">฿${item.rent.toLocaleString()}</span><span class="u">/ เดือน</span>
+          </div>
+          <button class="card-cta" type="button">ดูรายละเอียด</button>
+        </div>
+      </div>
+    </article>`;
+}
+
+function renderListings() {
+  const filtered = applyFiltersAndSort();
+  const el = document.getElementById("listings");
+  document.getElementById("resultCount").textContent = filtered.length;
+  updateActiveFilterCount();
+
+  if (filtered.length === 0) {
+    el.innerHTML = `
+      <div class="empty-state">
+        <div class="e-icon">🔍</div>
+        <h3>ไม่พบห้องเช่าที่ตรงกับเงื่อนไข</h3>
+        <p>ลองปรับช่วงราคา หรือกด "รีเซ็ต" เพื่อดูห้องทั้งหมด</p>
+      </div>`;
+    return;
+  }
+  el.innerHTML = filtered.map(renderCard).join("");
+  el.querySelectorAll(".listing-card").forEach(card => {
+    card.addEventListener("click", () => openModal(parseInt(card.dataset.id)));
+  });
+}
+
+function updateActiveFilterCount() {
+  let count = 0;
+  if (state.priceMin !== null) count++;
+  if (state.priceMax !== null) count++;
+  if (state.type    !== "all") count++;
+  if (state.size    !== "all") count++;
+  if (state.pet     !== "all") count++;
+  if (state.cook    !== "all") count++;
+  if (state.parking !== "all") count++;
+  if (state.nearBts)  count++;
+  if (state.furnished) count++;
+  const el = document.getElementById("activeCount");
+  if (el) {
+    el.textContent = count;
+    el.dataset.n = count;
+  }
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+function openModal(id) {
+  const item = LISTINGS.find(x => x.id === id);
+  if (!item) return;
+  const photoCells = item.photos.map(p =>
+    `<div class="modal-photo" style="background-image:url('${p}')"></div>`
+  ).join("");
+  const petCard = item.pet
+    ? { cls:'yes', em:'🐾', label:'อนุญาตสัตว์เลี้ยง', desc:'สัตว์เลี้ยงขนาดเล็ก' }
+    : { cls:'no',  em:'🚫', label:'ไม่อนุญาตสัตว์เลี้ยง', desc:'ทุกชนิด ทุกขนาด' };
+  const cookCard = item.cook
+    ? { cls:'yes', em:'🍳', label:'ทำอาหารได้', desc:'มีเครื่องดูดควัน' }
+    : { cls:'no',  em:'🚫', label:'ทำอาหารไม่ได้', desc:'อนุญาตเฉพาะอุ่น/ต้มเบาๆ' };
+  const parkCard = item.parking
+    ? { cls:'yes', em:'🚗', label:'มีที่จอดรถ', desc:'1 คันต่อห้อง' }
+    : { cls:'no',  em:'🚷', label:'ไม่มีที่จอดรถ', desc:'มีที่จอดรถสาธารณะใกล้เคียง' };
+
+  const html = `
+    <button class="modal-close" id="modalClose" aria-label="ปิด">✕</button>
+    <div class="modal-photos">${photoCells}</div>
+    <div class="modal-content">
+      <h2 class="modal-title">${item.name}</h2>
+      <div class="modal-loc">${item.area} · ${item.district} · ${item.station} เดิน ${item.walkMin} นาที</div>
+      <div class="price-strip">
+        <div class="price">฿${item.rent.toLocaleString()}<small>/ เดือน</small></div>
+        <div class="deposit">💰 ${item.deposit}</div>
+      </div>
+      <div class="section">
+        <h4>ประเภทห้อง</h4>
+        <div class="kv-grid">
+          <div class="kv"><span class="k">ประเภท</span><span class="v">${item.type}</span></div>
+          <div class="kv"><span class="k">ขนาด</span><span class="v">${item.size} ตร.ม.</span></div>
+          <div class="kv"><span class="k">ชั้น</span><span class="v">${item.floor}</span></div>
+          <div class="kv"><span class="k">เฟอร์นิเจอร์</span><span class="v">${item.furnished}</span></div>
+          <div class="kv"><span class="k">เข้าอยู่</span><span class="v">${item.available}</span></div>
+          <div class="kv"><span class="k">สัญญาขั้นต่ำ</span><span class="v">${item.minContract}</span></div>
+        </div>
+      </div>
+      <div class="section">
+        <h4>ค่าใช้จ่ายเพิ่มเติม</h4>
+        <div class="kv-grid">
+          <div class="kv"><span class="k">💧 ค่าน้ำ</span><span class="v">${item.water}</span></div>
+          <div class="kv"><span class="k">⚡ ค่าไฟ</span><span class="v">${item.electric}</span></div>
+          <div class="kv" style="grid-column:1/-1"><span class="k">🌐 อินเทอร์เน็ต</span><span class="v">${item.internet}</span></div>
+        </div>
+      </div>
+      <div class="section">
+        <h4>รายละเอียดห้อง</h4>
+        <div class="policy-grid">
+          <div class="policy-card ${petCard.cls}"><div class="em">${petCard.em}</div><div class="label">${petCard.label}</div><div class="desc">${petCard.desc}</div></div>
+          <div class="policy-card ${cookCard.cls}"><div class="em">${cookCard.em}</div><div class="label">${cookCard.label}</div><div class="desc">${cookCard.desc}</div></div>
+          <div class="policy-card ${parkCard.cls}"><div class="em">${parkCard.em}</div><div class="label">${parkCard.label}</div><div class="desc">${parkCard.desc}</div></div>
+        </div>
+      </div>
+      <div class="section">
+        <h4>เครื่องใช้ในห้อง</h4>
+        <div class="appliances-list">${item.appliances.map(a => `<span>${a}</span>`).join("")}</div>
+      </div>
+      <div class="section">
+        <h4>สิ่งที่ควรรู้ก่อนเช่า</h4>
+        <div class="know-list">
+          <ul>
+            <li>เซ็นสัญญาที่สำนักงานนิติบุคคลของอาคาร เตรียมบัตรประชาชน + สลิปเงินเดือน 3 เดือนล่าสุด</li>
+            <li>เงินมัดจำคืนภายใน 30 วันหลังย้ายออก หากห้องไม่เสียหาย</li>
+            <li>ค่าน้ำ/ค่าไฟจ่ายให้นิติฯ ตามรอบบิล (ไม่ใช่จ่ายตรงให้การประปา/การไฟฟ้า)</li>
+            <li>ขอเข้าชมห้องจริงและอ่านสัญญาให้ครบก่อนเซ็น</li>
+          </ul>
+        </div>
+      </div>
+      <div class="contact-row">
+        <button class="contact-btn contact-call" type="button" onclick="alert('📞 โทร 02-XXX-XXXX')">📞 โทร</button>
+        <button class="contact-btn contact-line" type="button" onclick="alert('💬 LINE ID: @condoswift')">💬 LINE</button>
+        <button class="contact-btn contact-msg" type="button" onclick="alert('✉️ ส่งข้อความหาผู้ลงประกาศ')">✉️ ส่งข้อความ</button>
+      </div>
+    </div>`;
+  document.getElementById("modalContent").innerHTML = html;
+  const m = document.getElementById("modal");
+  m.classList.add("open");
+  m.setAttribute("aria-hidden", "false");
+  document.getElementById("modalClose").addEventListener("click", closeModal);
+}
+function closeModal() {
+  const m = document.getElementById("modal");
+  m.classList.remove("open");
+  m.setAttribute("aria-hidden", "true");
+}
+document.getElementById("modal").addEventListener("click", (e) => {
+  if (e.target.id === "modal") closeModal();
+});
+
+/* ============================================================
+   SIDEBAR (mobile drawer)
+   ============================================================ */
+function openSidebar() {
+  document.getElementById("filterSidebar").classList.add("open");
+  document.getElementById("sidebarOverlay").classList.add("show");
+}
+function closeSidebar() {
+  document.getElementById("filterSidebar").classList.remove("open");
+  document.getElementById("sidebarOverlay").classList.remove("show");
+}
+document.getElementById("filterClose").addEventListener("click", closeSidebar);
+document.getElementById("sidebarOverlay").addEventListener("click", closeSidebar);
+document.getElementById("openFilters").addEventListener("click", openSidebar);
+
+/* ============================================================
+   RESET — restore defaults, clear inputs, render all
+   ============================================================ */
+function resetFilters() {
+  state = Object.assign({}, DEFAULT_STATE);
+  // Keep current sort selection (don't force back to updated)
+  state.sort = document.getElementById("sortSelect").value || "updated";
+
+  document.getElementById("priceMin").value = "";
+  document.getElementById("priceMax").value = "";
+  document.getElementById("searchInput").value = "";
+  document.getElementById("nearBts").checked = false;
+  document.getElementById("furnished").checked = false;
+  ["type","size","pet","cook","parking"].forEach(name => {
+    const r = document.querySelector(`input[name="${name}"][value="all"]`);
+    if (r) r.checked = true;
+  });
+  renderListings();
+}
+
+/* ============================================================
+   WIRING
+   ============================================================ */
+function initFilters() {
+  document.getElementById("priceMin").addEventListener("input", e => {
+    state.priceMin = e.target.value ? parseInt(e.target.value, 10) : null;
+    renderListings();
+  });
+  document.getElementById("priceMax").addEventListener("input", e => {
+    state.priceMax = e.target.value ? parseInt(e.target.value, 10) : null;
+    renderListings();
+  });
+  ["type","size","pet","cook","parking"].forEach(name => {
+    document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
+      radio.addEventListener("change", () => {
+        if (radio.checked) { state[name] = radio.value; renderListings(); }
+      });
+    });
+  });
+  document.getElementById("nearBts").addEventListener("change", e => {
+    state.nearBts = e.target.checked; renderListings();
+  });
+  document.getElementById("furnished").addEventListener("change", e => {
+    state.furnished = e.target.checked; renderListings();
+  });
+  document.getElementById("searchInput").addEventListener("input", e => {
+    state.search = e.target.value.trim(); renderListings();
+  });
+
+  const onSort = e => {
+    state.sort = e.target.value;
+    document.getElementById("sortSelect").value = state.sort;
+    const m = document.getElementById("sortSelectMobile");
+    if (m) m.value = state.sort;
+    renderListings();
+  };
+  document.getElementById("sortSelect").addEventListener("change", onSort);
+  document.getElementById("sortSelectMobile").addEventListener("change", onSort);
+
+  document.getElementById("btnSearch").addEventListener("click", () => {
+    closeSidebar(); renderListings();
+  });
+  document.getElementById("btnReset").addEventListener("click", resetFilters);
+}
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") { closeModal(); closeSidebar(); }
+});
+
+/* ============================================================
+   INIT — guarantee initial render with defaults shows ALL listings
+   ============================================================
+   Defensive: explicitly reset state to defaults right before first render
+   so any browser autofill on inputs (e.g. priceMin) cannot pollute it. */
+function init() {
+  state = Object.assign({}, DEFAULT_STATE);
+  // Clear any browser-autofilled values on number/search inputs
+  const pmin = document.getElementById("priceMin");
+  const pmax = document.getElementById("priceMax");
+  const sInp = document.getElementById("searchInput");
+  if (pmin) pmin.value = "";
+  if (pmax) pmax.value = "";
+  if (sInp) sInp.value = "";
+  initFilters();
+  renderListings();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>
